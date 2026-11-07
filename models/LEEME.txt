@@ -1,0 +1,10 @@
+Voz de Daniela (Piper, español de Argentina)
+
+Para usarla en tu computadora sin internet, copiá acá:
+  es_AR-daniela-high.onnx
+  es_AR-daniela-high.onnx.json
+
+Si esta carpeta está vacía (por ejemplo, al publicar en Vercel), la mesa descarga la voz
+de Hugging Face la primera vez (114 MB) y el navegador la guarda.
+
+Licencia de la voz: CC BY-SA 4.0 — Piper (rhasspy), voz entrenada por larcanio sobre el dataset OpenSLR 61.
