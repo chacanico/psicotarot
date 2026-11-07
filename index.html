@@ -6,7 +6,7 @@
 <title>Mesa de cartas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#E4DDCD; --ink:#24213A; --muted:#5E5873; --panel:rgba(252,248,238,.88);
@@ -266,52 +266,162 @@ button.icon{padding:9px 10px}
 .dcatdesc[hidden]{display:none}
 .tip{position:fixed; z-index:9; pointer-events:none; background:#000; color:#fff; font:500 13px/1.2 "Figtree", system-ui, sans-serif; padding:6px 9px; border-radius:6px; white-space:nowrap; transform:translate(14px, 16px)}
 .tip[hidden]{display:none}
-.reading{position:fixed; z-index:8; left:16px; top:calc(env(safe-area-inset-top,0px) + 84px); bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
-  width:min(390px, calc(100% - 32px)); display:flex; flex-direction:column; background:rgba(10,9,20,.86); color:#fff; border-radius:18px;
-  box-shadow:0 24px 60px rgba(0,0,0,.45); overflow:hidden}
+.reading{position:fixed; z-index:8; left:50%; transform:translateX(-50%); bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+  width:min(480px, calc(100% - 40px)); max-height:min(66%, calc(100% - 140px)); display:flex; flex-direction:column;
+  background:#1B1A47; color:#fff; border-radius:30px; box-shadow:0 26px 70px rgba(0,0,0,.5); padding-top:46px;
+  font-family:"Source Serif 4", Georgia, "Times New Roman", serif}
 .reading[hidden]{display:none}
-.rd-head{display:flex; align-items:center; justify-content:space-between; padding:14px 14px 10px 18px; border-bottom:1px solid rgba(255,255,255,.12)}
-.rd-head h2{font:400 22px/1.1 "Young Serif", Georgia, serif; margin:0}
-.rd-tools{display:flex; gap:6px}
-.reading button{color:#fff; background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.22)}
-.reading button:hover{border-color:#fff}
-.reading button.primary{background:#D3AF64; color:#1B1830; border-color:#D3AF64}
-.reading button.off{color:rgba(255,255,255,.5)}
-.reading button.rec{background:#B3261E; border-color:#B3261E; animation:recpulse 1.2s ease-in-out infinite}
-@keyframes recpulse{50%{box-shadow:0 0 0 6px rgba(179,38,30,.25)}}
-.rd-log{flex:1; overflow:auto; padding:14px 18px; display:flex; flex-direction:column; gap:12px}
+.reading{transition:height 1.1s cubic-bezier(.3,1.5,.5,1), max-height 1.1s cubic-bezier(.3,1.5,.5,1)}
+.reading.enter{animation:rdrise 1.1s cubic-bezier(.3,1.45,.5,1) both}
+@keyframes rdrise{from{opacity:0; translate:0 60px; scale:.94}}
+.twc{opacity:0; animation:twin .55s ease forwards}
+@keyframes twin{from{opacity:0; text-shadow:0 0 10px rgba(242,208,126,.95)} 60%{opacity:1} to{opacity:1; text-shadow:none}}
+@media (prefers-reduced-motion: reduce){ .twc{animation:none; opacity:1} .reading, .reading.enter{transition:none; animation:none} }
+.rd-badge{position:absolute; left:50%; top:-40px; transform:translateX(-50%); width:80px; height:80px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #FBE3A2, #F2D07E 55%, #D9AE55); display:grid; place-items:center; box-shadow:0 8px 20px rgba(0,0,0,.3), inset 0 -3px 8px rgba(150,100,30,.35)}
+.rd-badge svg{width:58px; height:58px; fill:none; stroke:#14132E; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; overflow:visible}
+.rd-badge .rays{stroke-width:2.4}
+.rd-badge .fibers path{stroke:rgba(255,236,190,.22); stroke-width:.55}
+.rd-badge .lash{stroke:#14132E}
+.rd-badge .lid{transform-box:view-box; transform-origin:32px 14px; transform:scaleY(0); animation:blink 6.5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(0)} 95.5%{transform:scaleY(1)}}
+.rd-overlay .rd-badge .lid{animation-delay:-3s}
+.rd-badge.closed .lid{animation:none; transform:scaleY(1); transition:transform .14s ease-in}
+/* brillo solar detrás del círculo dorado */
+.rd-badge::before, .rd-badge::after{content:""; position:absolute; border-radius:50%; pointer-events:none; z-index:-1}
+.rd-badge::before{inset:-46px; background:repeating-conic-gradient(from 0deg, rgba(255,214,120,.5) 0deg 3deg, rgba(255,214,120,0) 3deg 12deg);
+  -webkit-mask:radial-gradient(circle, #000 30%, transparent 68%); mask:radial-gradient(circle, #000 30%, transparent 68%); animation:sunspin 50s linear infinite}
+.rd-badge::after{inset:-26px; background:radial-gradient(circle, rgba(255,222,140,.75) 0%, rgba(255,190,80,.32) 45%, rgba(255,170,60,0) 72%); animation:sunpulse 4s ease-in-out infinite}
+@keyframes sunspin{to{transform:rotate(360deg)}}
+@keyframes sunpulse{50%{transform:scale(1.08); opacity:.8}}
+#rdStartBtn{padding:21px 12px; font-size:19px}
+.rd-related{position:fixed; inset:0; z-index:7; pointer-events:none}
+.rd-expand{position:fixed; inset:0; z-index:9; pointer-events:none}
+.rd-expand[hidden]{display:none}
+.rd-expand button{position:absolute; transform:translate(-50%, 0); pointer-events:auto; white-space:nowrap; font:600 12.5px/1 "Figtree", system-ui, sans-serif;
+  color:#1B1A47; background:#F2D07E; border:0; border-radius:999px; padding:7px 12px 7px 10px; box-shadow:0 6px 16px rgba(0,0,0,.45); transition:opacity .3s}
+.rd-expand button:hover{background:#F7DC97; border:0}
+.rd-expand button[hidden]{display:none}
+.msg.ext{text-align:left; font-size:16px; padding:12px 14px; border-radius:14px; background:rgba(242,208,126,.08); border:1px solid rgba(242,208,126,.25)}
+.msg.ext .cardchip{display:flex}
+.rs-ext{margin:10px 0 0 12px; padding-left:12px; border-left:2px solid rgba(242,208,126,.35)}
+.rs-ext p{font-size:15px}
+.rel-card{position:absolute; width:112px; aspect-ratio:9/16; perspective:900px; pointer-events:auto; cursor:default;
+  transition:opacity .7s ease, scale .7s cubic-bezier(.2,.8,.2,1); animation:relfloat 6.5s ease-in-out infinite}
+.rel-card.enter{opacity:0; scale:.7}
+.rel-card .spin{position:absolute; inset:0; transform-style:preserve-3d; animation:relspin 16s linear infinite}
+.rel-card:hover .spin{animation-play-state:paused}
+.rel-card .face{position:absolute; inset:0; border-radius:10px; background:#222 center/cover no-repeat; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.12)}
+.rel-card .back{transform:rotateY(180deg)}
+.rel-card .lbl{position:absolute; left:50%; top:calc(100% + 12px); transform:translateX(-50%); white-space:nowrap; font:600 12px/1.2 "Figtree", system-ui, sans-serif;
+  color:#fff; background:rgba(16,15,40,.78); padding:5px 9px; border-radius:7px; text-align:center}
+.rel-card .lbl small{display:block; font-weight:400; font-size:11px; color:rgba(255,255,255,.65); margin-top:2px}
+.rd-related .cap{position:absolute; font:600 11px/1.2 "Figtree", system-ui, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:rgba(242,208,126,.85); white-space:nowrap; transition:opacity .6s}
+@keyframes relfloat{50%{translate:0 -12px}}
+@keyframes relspin{from{transform:rotateY(0)} to{transform:rotateY(360deg)}}
+.rd-btns.one{grid-template-columns:1fr}
+.rd-primary.rd-gold{background:#F2D07E; color:#1B1A47; padding:18px 12px; font-size:18px}
+.rd-primary.rd-gold:hover{background:#F7DC97}
+.rd-badge .fill{fill:#14132E; stroke:none}
+.reading.speaking .rd-badge{animation:badgeglow 2.4s ease-in-out infinite}
+@keyframes badgeglow{50%{box-shadow:0 0 0 8px rgba(242,208,126,.18), 0 8px 26px rgba(242,208,126,.4)}}
+.rd-tools{position:absolute; right:14px; top:12px; display:flex; gap:2px}
+.rd-ico{background:transparent; border:0; color:rgba(255,255,255,.55); padding:7px; border-radius:8px; font-size:14px}
+.rd-ico:hover{color:#fff; background:rgba(255,255,255,.08); border:0}
+.rd-ico.off{color:rgba(255,255,255,.3)}
+.rd-settings{margin:0 22px 8px; padding:12px 14px; border-radius:16px; background:rgba(255,255,255,.06); display:flex; flex-direction:column; gap:8px; font-family:"Figtree", system-ui, sans-serif}
+.rd-settings[hidden]{display:none}
+.rd-scroll{overflow:auto; padding:2px 28px 22px; display:flex; flex-direction:column; gap:12px; scrollbar-width:none}
+.rd-scroll::-webkit-scrollbar, .rs-cards::-webkit-scrollbar{display:none}
+.rs-cards{scrollbar-width:none}
+.reading.nomic .wavemic{display:none}
+.rd-log{display:flex; flex-direction:column; gap:12px}
 .rd-log:empty{display:none}
-.msg{font-size:15px; line-height:1.6; white-space:pre-wrap}
-.msg.me{align-self:flex-end; max-width:85%; background:rgba(255,255,255,.1); border-radius:14px 14px 4px 14px; padding:9px 12px; color:rgba(255,255,255,.92)}
-.msg.mesa{color:rgba(255,255,255,.9)}
-.msg .cardchip{display:inline-flex; align-items:center; gap:7px; font:600 13px/1 "Figtree", system-ui, sans-serif; color:#fff; background:rgba(255,255,255,.08); border-radius:999px; padding:5px 10px 5px 8px; margin-bottom:6px}
-.msg .cardchip i{width:9px; height:9px; border-radius:50%; display:inline-block}
-.msg .q{display:block; margin-top:8px; font-style:italic; color:#F2D9A0}
-.msg.cierre{border-top:1px solid rgba(255,255,255,.15); padding-top:12px}
-.msg.cierre b{display:block; font:400 17px/1.3 "Young Serif", Georgia, serif; margin-bottom:6px; color:#F2D9A0}
-.msg.wait{color:rgba(255,255,255,.55); font-style:italic}
+.rd-title{margin:4px 0 0; text-align:center; font:400 clamp(24px, 2.3vw, 30px)/1.25 "Source Serif 4", Georgia, serif; text-wrap:balance}
+.msg{text-align:center; font-size:18px; line-height:1.6}
+.msg.me{align-self:stretch; background:#48466B; border-radius:18px; padding:16px 18px; font-style:italic; font-size:17px; color:rgba(255,255,255,.95)}
+.msg.me.small{font-size:15px; padding:10px 14px; background:rgba(72,70,107,.6)}
+.msg.mesa .tx{display:block}
+.msg .cardchip{display:inline-flex; align-items:center; gap:7px; font:600 12px/1 "Figtree", system-ui, sans-serif; letter-spacing:.04em; text-transform:uppercase; color:rgba(255,255,255,.75); margin-bottom:10px}
+.msg .cardchip i{width:8px; height:8px; border-radius:50%; display:inline-block}
+.msg .q{display:block; margin-top:10px; color:#F2D07E; font-size:19px}
+.msg.cierre b{display:block; font:600 14px/1 "Figtree", system-ui, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#F2D07E; margin-bottom:10px}
+.msg.wait{font-size:14px; font-style:italic; color:rgba(255,255,255,.5)}
 .msg.wait::after{content:"…"; animation:dots 1.4s steps(4) infinite}
+.msg.hello{display:none}
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
-.rd-box{padding:12px 18px 16px; border-top:1px solid rgba(255,255,255,.12); display:flex; flex-direction:column; gap:10px}
+.rd-box{display:flex; flex-direction:column; gap:16px}
 .rd-box[hidden]{display:none}
-.rd-lbl{font:400 17px/1.3 "Young Serif", Georgia, serif}
-.reading textarea{font:400 15px/1.5 "Figtree", system-ui, sans-serif; color:#fff; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.22); border-radius:12px; padding:10px 12px; resize:vertical}
-.reading textarea:focus{outline:2px solid #D3AF64; outline-offset:1px}
-.reading textarea::placeholder{color:rgba(255,255,255,.45)}
+.rd-count{display:flex; justify-content:center; gap:6px; font-family:"Figtree", system-ui, sans-serif}
+.rd-count button{background:transparent; color:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.2); border-radius:999px; padding:6px 12px; font-size:13px}
+.rd-count button[aria-pressed="true"]{background:#F2D07E; color:#1B1A47; border-color:#F2D07E}
+.wavemic{position:relative; display:flex; align-items:center; justify-content:center; height:70px}
+.wave{display:flex; align-items:center; gap:4px; height:60px}
+.wave i{display:block; width:4px; height:calc(var(--h)*54px); border-radius:3px; background:#5D5A8C; transform-origin:center}
+.wave i{transition:transform .07s linear}
+.reading.listening .wave i{background:#C9C5F2}
+@keyframes wavebar{0%{transform:scaleY(.25)}100%{transform:scaleY(1)}}
+.micbtn{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:70px; height:70px; border-radius:50%; background:#fff; border:0; color:#14132E;
+  display:grid; place-items:center; box-shadow:0 8px 18px rgba(0,0,0,.35); padding:0}
+.micbtn:hover{border:0; transform:translate(-50%,-50%) scale(1.04)}
+.micbtn .mico{width:32px; height:32px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round}
+.micbtn .mico rect{fill:currentColor}
+.micbtn.rec{background:#F2D07E; animation:recpulse 1.2s ease-in-out infinite}
+@keyframes recpulse{50%{box-shadow:0 0 0 10px rgba(242,208,126,.25)}}
+.reading textarea{font:italic 400 17px/1.45 "Source Serif 4", Georgia, serif; text-align:center; color:#fff; background:transparent;
+  border:1px solid rgba(255,255,255,.22); border-radius:18px; padding:13px 16px; resize:none; min-height:50px}
+.reading textarea:focus{outline:none; border-color:#F2D07E}
+.reading textarea::placeholder{color:rgba(255,255,255,.38)}
+.rd-btns{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.rd-primary, .rd-ghost{font:600 16px/1.2 "Source Serif 4", Georgia, serif; border-radius:16px; padding:14px 10px; justify-content:center; white-space:normal; text-align:center}
+.rd-primary{background:#7B78B3; color:#fff; border:0; box-shadow:0 6px 14px rgba(0,0,0,.35)}
+.rd-primary:hover{background:#8784C2; border:0}
+.rd-ghost{background:transparent; color:#fff; border:1px solid rgba(160,156,220,.6); font-weight:400}
+.rd-ghost:hover{border-color:#fff}
+.reading button:disabled{opacity:.5}
 .rd-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-.rd-row .primary{margin-left:auto}
-.reading .seg{border-color:rgba(255,255,255,.22)}
-.reading .seg button{background:transparent; border:0}
-.reading .seg button[aria-pressed="true"]{background:#D3AF64; color:#1B1830}
-.rd-note{margin:0; font-size:12px; color:rgba(255,255,255,.5)}
+.rd-note{margin:0; font-size:12px; color:rgba(255,255,255,.55); text-align:center; font-family:"Figtree", system-ui, sans-serif}
 .rd-note[hidden]{display:none}
 .rd-small{font-size:13px; color:rgba(255,255,255,.7)}
 .rd-voicerow select{flex:1; min-width:0; font:500 13px/1.2 "Figtree", system-ui, sans-serif; color:#fff; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:7px 8px}
 .rd-voicerow select option{color:#000}
+.rd-voicerow .rd-ghost{padding:7px 12px; font:500 13px/1 "Figtree", system-ui, sans-serif; border-radius:8px}
 .reading button[hidden]{display:none}
 .rd-dict{color:rgba(255,255,255,.7)}
+.msg.ctx{font-size:17.5px; line-height:1.45; padding:12px 16px; background:rgba(72,70,107,.75)}
+.msg.step{font:600 12px/1.2 "Figtree", system-ui, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:rgba(242,208,126,.85); margin-bottom:-6px}
+.rd-log.swap > *{animation:rdswap 1s cubic-bezier(.3,1.3,.5,1) both}
+.rd-log.swap > *:nth-child(2){animation-delay:.05s} .rd-log.swap > *:nth-child(3){animation-delay:.12s}
+@keyframes rdswap{from{opacity:0; transform:translateY(14px)}}
+.rd-overlay{position:fixed; inset:0; z-index:12; display:grid; place-items:center; padding:60px 20px 20px; background:rgba(6,5,16,.55);
+  backdrop-filter:blur(12px) saturate(.8); -webkit-backdrop-filter:blur(12px) saturate(.8); animation:rdfade .45s ease both}
+.rd-overlay[hidden]{display:none}
+@keyframes rdfade{from{opacity:0}}
+.rd-modal{position:relative; width:min(440px, 100%); max-height:calc(100vh - 100px); display:flex; flex-direction:column; gap:16px; text-align:center;
+  background:#1B1A47; color:#fff; border-radius:30px; padding:58px 32px 30px; box-shadow:0 30px 80px rgba(0,0,0,.55);
+  font-family:"Source Serif 4", Georgia, serif; animation:rdpop .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rdpop{from{opacity:0; transform:translateY(16px) scale(.97)}}
+.rd-modal.wide{width:min(560px, 100%)}
+.rd-x{position:absolute; right:14px; top:12px}
+.rd-lead{margin:0; font-size:17px; line-height:1.5; color:rgba(255,255,255,.8)}
+.rd-input{font:400 19px/1.3 "Source Serif 4", Georgia, serif; text-align:center; color:#fff; background:transparent; border:1px solid rgba(255,255,255,.25); border-radius:16px; padding:15px}
+.rd-input:focus{outline:none; border-color:#F2D07E}
+.rd-input::placeholder{color:rgba(255,255,255,.38); font-style:italic}
+.rd-micperm{display:flex; flex-direction:column; gap:8px; align-items:center}
+.rd-micperm .rd-ghost{padding:12px 18px; font-size:15px}
+.rd-micperm .rd-ghost.on{border-color:#7FD8A4; color:#BFF0D2}
+.rs-cards{display:flex; flex-direction:column; gap:14px; text-align:left; overflow:auto; min-height:0; flex:1 1 auto; padding-right:4px}
+.rs-card{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.05)}
+.rs-pos{display:block; font:600 11px/1.2 "Figtree", system-ui, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:rgba(242,208,126,.85); margin-bottom:6px}
+.rs-card .cardchip{margin-bottom:6px}
+.rs-card p{margin:0; font-size:16px; line-height:1.55; color:rgba(255,255,255,.9)}
+#rsCierre{text-align:left; font-size:17px}
+#rsCierre[hidden]{display:none}
+.rd-modal .msg.me{margin:0}
 @media (max-width:760px){
-  .reading{left:8px; right:8px; width:auto; top:auto; height:62%}
+  .reading{left:10px; right:10px; width:auto; transform:none; bottom:10px; max-height:58%; border-radius:24px}
+  .rd-scroll{padding:6px 18px 20px}
+  .msg{font-size:16px}
 }
 .fps{position:fixed; left:12px; bottom:calc(env(safe-area-inset-bottom,0px) + 10px); z-index:4; font:500 12px/1 "Figtree", system-ui, sans-serif; color:#fff; background:rgba(0,0,0,.55); padding:6px 9px; border-radius:6px; pointer-events:none; font-variant-numeric:tabular-nums}
 .detail.deckinfo .dactions{display:none}
@@ -584,37 +694,69 @@ button.icon{padding:9px 10px}
 
 <div class="fps" id="fps" aria-hidden="true"></div>
 <section class="reading" id="reading" hidden aria-labelledby="rdTitle">
-  <header class="rd-head">
-    <h2 id="rdTitle">Tirada</h2>
-    <div class="rd-tools">
-      <button id="rdVoice" class="icon" aria-pressed="true" aria-label="Leer en voz alta" title="Leer en voz alta"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/><path class="slash" d="M3 3l18 18"/></svg></button>
-      <button id="rdClose" class="icon quiet" aria-label="Cerrar tirada">✕</button>
-    </div>
-  </header>
-  <div class="rd-log" id="rdLog" aria-live="polite"></div>
-  <div class="rd-box" id="rdSetup">
-    <label class="rd-lbl" for="rdQ">¿Qué querés preguntarle a la mesa?</label>
-    <textarea id="rdQ" rows="3" placeholder="Por ejemplo: ¿por qué me cuesta tanto decir que no en el trabajo?"></textarea>
-    <div class="rd-row">
-      <button id="rdMic" class="icon" aria-label="Dictar la pregunta" title="Dictar con el micrófono"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
-      <div class="seg" id="rdN" role="group" aria-label="Cantidad de cartas"><button data-n="1" aria-pressed="false">1 carta</button><button data-n="3" aria-pressed="true">3</button><button data-n="5" aria-pressed="false">5</button></div>
-      <button id="rdGo" class="primary">Tirar</button>
-    </div>
-    <p class="rd-note">La mesa ofrece lecturas para reflexionar, no predicciones ni diagnósticos.</p>
-    <div class="rd-row rd-voicerow"><label class="rd-small" for="rdVoiceSel">Voz</label><select id="rdVoiceSel"></select><button id="rdTest" class="quiet">Probar</button></div>
+  <div class="rd-badge" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="rays" d="M32 1v9M32 54v9M13.5 8.5l4.5 6.5M50.5 8.5L46 15M13.5 55.5l4.5-6.5M50.5 55.5L46 49M4 20l7 3.5M60 20l-7 3.5M4 44l7-3.5M60 44l-7-3.5"/><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="url(#eyeSclera)" stroke="none"/><g clip-path="url(#eyeClip)"><g class="eyeg"><circle cx="32" cy="32" r="9.6" fill="url(#eyeIris)" stroke="none"/><g class="fibers"><path d="M32 32L41.40 32.00"/><path d="M32 32L41.08 34.43"/><path d="M32 32L40.14 36.70"/><path d="M32 32L38.65 38.65"/><path d="M32 32L36.70 40.14"/><path d="M32 32L34.43 41.08"/><path d="M32 32L32.00 41.40"/><path d="M32 32L29.57 41.08"/><path d="M32 32L27.30 40.14"/><path d="M32 32L25.35 38.65"/><path d="M32 32L23.86 36.70"/><path d="M32 32L22.92 34.43"/><path d="M32 32L22.60 32.00"/><path d="M32 32L22.92 29.57"/><path d="M32 32L23.86 27.30"/><path d="M32 32L25.35 25.35"/><path d="M32 32L27.30 23.86"/><path d="M32 32L29.57 22.92"/><path d="M32 32L32.00 22.60"/><path d="M32 32L34.43 22.92"/><path d="M32 32L36.70 23.86"/><path d="M32 32L38.65 25.35"/><path d="M32 32L40.14 27.30"/><path d="M32 32L41.08 29.57"/></g><circle cx="32" cy="32" r="9.6" fill="none" stroke="#0B1722" stroke-width="1.3"/><circle class="pupil" cx="32" cy="32" r="3.9" fill="#04070B" stroke="none"/></g><circle cx="28.6" cy="28.4" r="1.9" fill="#fff" opacity=".92" stroke="none"/><circle cx="35.2" cy="35" r=".9" fill="#fff" opacity=".55" stroke="none"/><rect x="0" y="0" width="64" height="64" fill="url(#eyeShade)" stroke="none"/><rect class="lid" x="0" y="14" width="64" height="36" fill="url(#eyeLid)" stroke="none"/></g><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="none"/><path class="lash" d="M9.5 29.5c6-7 13.5-10.6 22.5-10.6s16.5 3.6 22.5 10.6" fill="none" stroke-width="3"/></svg></div>
+  <div class="rd-tools">
+    <button id="rdVoice" class="rd-ico" aria-pressed="true" aria-label="Leer en voz alta" title="Leer en voz alta"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/><path class="slash" d="M3 3l18 18"/></svg></button>
+    <button id="rdGear" class="rd-ico" aria-expanded="false" aria-controls="rdSettings" aria-label="Ajustes de la tirada" title="Ajustes"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg></button>
+    <button id="rdClose" class="rd-ico" aria-label="Cerrar tirada" title="Cerrar">✕</button>
+  </div>
+  <div class="rd-settings" id="rdSettings" hidden>
+    <div class="rd-row rd-voicerow"><label class="rd-small" for="rdVoiceSel">Voz</label><select id="rdVoiceSel"></select><button id="rdTest" class="rd-ghost">Probar</button></div>
     <p class="rd-note" id="rdVoiceTip" hidden></p>
+    <p class="rd-note">La mesa ofrece lecturas para reflexionar, no predicciones ni diagnósticos.</p>
   </div>
-  <div class="rd-box" id="rdReply" hidden>
-    <textarea id="rdA" rows="2" placeholder="Respondé con tus palabras…"></textarea>
-    <div class="rd-row">
-      <button id="rdMic2" class="icon" aria-label="Dictar la respuesta" title="Dictar con el micrófono"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
-      <button id="rdSkip" class="quiet">Seguir sin responder</button>
-      <button id="rdSend" class="primary">Responder</button>
+  <div class="rd-scroll" id="rdScroll">
+    <div class="rd-log" id="rdLog" aria-live="polite"></div>
+    <div class="rd-box" id="rdSetup">
+      <h2 class="rd-title" id="rdTitle">¿Qué querés preguntarle a las cartas?</h2>
+      <div class="rd-count" id="rdN" role="group" aria-label="Cantidad de cartas"><button data-n="1" aria-pressed="false">1 carta</button><button data-n="3" aria-pressed="true">3 cartas</button><button data-n="5" aria-pressed="false">5 cartas</button></div>
+      <div class="wavemic"><div class="wave" aria-hidden="true"><i style="--h:0.9;--d:0.0s"></i><i style="--h:0.6;--d:0.07s"></i><i style="--h:0.5;--d:0.14s"></i><i style="--h:0.25;--d:0.21000000000000002s"></i><i style="--h:0.9;--d:0.28s"></i><i style="--h:0.45;--d:0.35000000000000003s"></i><i style="--h:0.3;--d:0.42000000000000004s"></i><i style="--h:0.75;--d:0.49000000000000005s"></i><i style="--h:0.5;--d:0.56s"></i><i style="--h:0.35;--d:0.6300000000000001s"></i><i style="--h:0.8;--d:0.7000000000000001s"></i><i style="--h:0.55;--d:0.77s"></i><i style="--h:0.85;--d:0.8400000000000001s"></i><i style="--h:0.4;--d:0.9100000000000001s"></i><i style="--h:0.7;--d:0.9800000000000001s"></i><i style="--h:0.3;--d:1.05s"></i><i style="--h:0.85;--d:0.020000000000000018s"></i><i style="--h:0.95;--d:0.09000000000000008s"></i><i style="--h:0.45;--d:0.16000000000000014s"></i><i style="--h:0.35;--d:0.22999999999999998s"></i><i style="--h:0.6;--d:0.30000000000000004s"></i><i style="--h:0.5;--d:0.3700000000000001s"></i><i style="--h:0.3;--d:0.43999999999999995s"></i><i style="--h:0.7;--d:0.51s"></i><i style="--h:0.55;--d:0.5800000000000001s"></i><i style="--h:0.3;--d:0.6500000000000001s"></i><i style="--h:0.8;--d:0.7200000000000002s"></i><i style="--h:0.6;--d:0.79s"></i><i style="--h:0.4;--d:0.8600000000000001s"></i><i style="--h:0.75;--d:0.9300000000000002s"></i><i style="--h:0.5;--d:1.0s"></i><i style="--h:0.3;--d:1.0700000000000003s"></i><i style="--h:0.65;--d:0.040000000000000036s"></i><i style="--h:0.85;--d:0.10999999999999988s"></i><i style="--h:0.95;--d:0.18000000000000016s"></i><i style="--h:0.9;--d:0.25s"></i><i style="--h:0.6;--d:0.3200000000000003s"></i><i style="--h:0.85;--d:0.3900000000000001s"></i><i style="--h:0.9;--d:0.45999999999999996s"></i><i style="--h:0.6;--d:0.5300000000000002s"></i><i style="--h:0.95;--d:0.6000000000000001s"></i><i style="--h:0.55;--d:0.6699999999999999s"></i></div><button class="micbtn" id="rdMic" aria-label="Dictar la pregunta" title="Dictar la pregunta"><svg viewBox="0 0 24 24" aria-hidden="true" class="mico"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></button></div>
+      <textarea id="rdQ" rows="1" placeholder="Pulsá para responder o tipeá tu pregunta acá"></textarea>
+      <div class="rd-btns one"><button id="rdGo" class="rd-primary rd-gold">Comenzar tirada</button></div>
     </div>
+    <div class="rd-box" id="rdReply" hidden>
+      <div class="wavemic"><div class="wave" aria-hidden="true"><i style="--h:0.9;--d:0.0s"></i><i style="--h:0.6;--d:0.07s"></i><i style="--h:0.5;--d:0.14s"></i><i style="--h:0.25;--d:0.21000000000000002s"></i><i style="--h:0.9;--d:0.28s"></i><i style="--h:0.45;--d:0.35000000000000003s"></i><i style="--h:0.3;--d:0.42000000000000004s"></i><i style="--h:0.75;--d:0.49000000000000005s"></i><i style="--h:0.5;--d:0.56s"></i><i style="--h:0.35;--d:0.6300000000000001s"></i><i style="--h:0.8;--d:0.7000000000000001s"></i><i style="--h:0.55;--d:0.77s"></i><i style="--h:0.85;--d:0.8400000000000001s"></i><i style="--h:0.4;--d:0.9100000000000001s"></i><i style="--h:0.7;--d:0.9800000000000001s"></i><i style="--h:0.3;--d:1.05s"></i><i style="--h:0.85;--d:0.020000000000000018s"></i><i style="--h:0.95;--d:0.09000000000000008s"></i><i style="--h:0.45;--d:0.16000000000000014s"></i><i style="--h:0.35;--d:0.22999999999999998s"></i><i style="--h:0.6;--d:0.30000000000000004s"></i><i style="--h:0.5;--d:0.3700000000000001s"></i><i style="--h:0.3;--d:0.43999999999999995s"></i><i style="--h:0.7;--d:0.51s"></i><i style="--h:0.55;--d:0.5800000000000001s"></i><i style="--h:0.3;--d:0.6500000000000001s"></i><i style="--h:0.8;--d:0.7200000000000002s"></i><i style="--h:0.6;--d:0.79s"></i><i style="--h:0.4;--d:0.8600000000000001s"></i><i style="--h:0.75;--d:0.9300000000000002s"></i><i style="--h:0.5;--d:1.0s"></i><i style="--h:0.3;--d:1.0700000000000003s"></i><i style="--h:0.65;--d:0.040000000000000036s"></i><i style="--h:0.85;--d:0.10999999999999988s"></i><i style="--h:0.95;--d:0.18000000000000016s"></i><i style="--h:0.9;--d:0.25s"></i><i style="--h:0.6;--d:0.3200000000000003s"></i><i style="--h:0.85;--d:0.3900000000000001s"></i><i style="--h:0.9;--d:0.45999999999999996s"></i><i style="--h:0.6;--d:0.5300000000000002s"></i><i style="--h:0.95;--d:0.6000000000000001s"></i><i style="--h:0.55;--d:0.6699999999999999s"></i></div><button class="micbtn" id="rdMic2" aria-label="Dictar la respuesta" title="Dictar la respuesta"><svg viewBox="0 0 24 24" aria-hidden="true" class="mico"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></button></div>
+      <textarea id="rdA" rows="1" placeholder="Pulsá para responder o tipeá tu respuesta acá"></textarea>
+      <div class="rd-btns"><button id="rdSend" class="rd-primary">Responder</button><button id="rdSkip" class="rd-ghost">Continuar sin responder</button></div>
+    </div>
+    <div class="rd-box" id="rdEnd" hidden><div class="rd-btns"><button id="rdShowRes" class="rd-primary">Ver el resultado</button><button id="rdEndClose" class="rd-ghost">Volver a la mesa</button></div></div>
   </div>
-  <div class="rd-box" id="rdEnd" hidden><div class="rd-row"><button id="rdNew" class="primary">Nueva tirada</button></div></div>
 </section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <radialGradient id="eyeIris" cx="50%" cy="46%" r="56%"><stop offset="0" stop-color="#D9B46A"/><stop offset=".28" stop-color="#8E6A2E"/><stop offset=".62" stop-color="#3D6F86"/><stop offset="1" stop-color="#16303F"/></radialGradient>
+  <radialGradient id="eyeSclera" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="#FFFDF8"/><stop offset=".72" stop-color="#F1EADB"/><stop offset="1" stop-color="#C8B993"/></radialGradient>
+  <linearGradient id="eyeShade" x1="0" y1="0" x2="0" y2="1"><stop offset=".22" stop-color="#3A2A10" stop-opacity=".55"/><stop offset=".45" stop-color="#3A2A10" stop-opacity="0"/><stop offset=".85" stop-color="#3A2A10" stop-opacity="0"/><stop offset="1" stop-color="#3A2A10" stop-opacity=".25"/></linearGradient>
+  <linearGradient id="eyeLid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9C46F"/><stop offset="1" stop-color="#C99A3E"/></linearGradient>
+  <clipPath id="eyeClip"><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z"/></clipPath>
+</defs></svg>
 <div class="tip" id="tip" hidden></div>
+<div class="rd-related" id="rdRelated" aria-live="polite"></div>
+<div class="rd-expand" id="rdExpandBtns" hidden></div>
+<div class="rd-overlay" id="rdWelcome" hidden role="dialog" aria-labelledby="rwTitle">
+  <div class="rd-modal">
+    <div class="rd-badge" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="rays" d="M32 1v9M32 54v9M13.5 8.5l4.5 6.5M50.5 8.5L46 15M13.5 55.5l4.5-6.5M50.5 55.5L46 49M4 20l7 3.5M60 20l-7 3.5M4 44l7-3.5M60 44l-7-3.5"/><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="url(#eyeSclera)" stroke="none"/><g clip-path="url(#eyeClip)"><g class="eyeg"><circle cx="32" cy="32" r="9.6" fill="url(#eyeIris)" stroke="none"/><g class="fibers"><path d="M32 32L41.40 32.00"/><path d="M32 32L41.08 34.43"/><path d="M32 32L40.14 36.70"/><path d="M32 32L38.65 38.65"/><path d="M32 32L36.70 40.14"/><path d="M32 32L34.43 41.08"/><path d="M32 32L32.00 41.40"/><path d="M32 32L29.57 41.08"/><path d="M32 32L27.30 40.14"/><path d="M32 32L25.35 38.65"/><path d="M32 32L23.86 36.70"/><path d="M32 32L22.92 34.43"/><path d="M32 32L22.60 32.00"/><path d="M32 32L22.92 29.57"/><path d="M32 32L23.86 27.30"/><path d="M32 32L25.35 25.35"/><path d="M32 32L27.30 23.86"/><path d="M32 32L29.57 22.92"/><path d="M32 32L32.00 22.60"/><path d="M32 32L34.43 22.92"/><path d="M32 32L36.70 23.86"/><path d="M32 32L38.65 25.35"/><path d="M32 32L40.14 27.30"/><path d="M32 32L41.08 29.57"/></g><circle cx="32" cy="32" r="9.6" fill="none" stroke="#0B1722" stroke-width="1.3"/><circle class="pupil" cx="32" cy="32" r="3.9" fill="#04070B" stroke="none"/></g><circle cx="28.6" cy="28.4" r="1.9" fill="#fff" opacity=".92" stroke="none"/><circle cx="35.2" cy="35" r=".9" fill="#fff" opacity=".55" stroke="none"/><rect x="0" y="0" width="64" height="64" fill="url(#eyeShade)" stroke="none"/><rect class="lid" x="0" y="14" width="64" height="36" fill="url(#eyeLid)" stroke="none"/></g><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="none"/><path class="lash" d="M9.5 29.5c6-7 13.5-10.6 22.5-10.6s16.5 3.6 22.5 10.6" fill="none" stroke-width="3"/></svg></div>
+    <button class="rd-ico rd-x" id="rwClose" aria-label="Cerrar">✕</button>
+    <h2 class="rd-title" id="rwTitle">Te doy la bienvenida a la mesa</h2>
+    <p class="rd-lead">Antes de tirar las cartas, contame cómo te llamás.</p>
+    <input id="rdName" class="rd-input" placeholder="Escribí o decí tu nombre" maxlength="40" autocomplete="given-name" autofocus>
+    <div class="rd-micperm">
+      <button id="rdMicOn" class="rd-ghost">Activar el micrófono</button>
+      <p class="rd-note" id="rdMicState">Así podés hablarle a la mesa en lugar de escribir.</p>
+    </div>
+    <button id="rdStartBtn" class="rd-primary">Comenzar</button>
+  </div>
+</div>
+<div class="rd-overlay" id="rdResult" hidden role="dialog" aria-labelledby="rsTitle">
+  <div class="rd-modal wide">
+    <div class="rd-badge" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="rays" d="M32 1v9M32 54v9M13.5 8.5l4.5 6.5M50.5 8.5L46 15M13.5 55.5l4.5-6.5M50.5 55.5L46 49M4 20l7 3.5M60 20l-7 3.5M4 44l7-3.5M60 44l-7-3.5"/><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="url(#eyeSclera)" stroke="none"/><g clip-path="url(#eyeClip)"><g class="eyeg"><circle cx="32" cy="32" r="9.6" fill="url(#eyeIris)" stroke="none"/><g class="fibers"><path d="M32 32L41.40 32.00"/><path d="M32 32L41.08 34.43"/><path d="M32 32L40.14 36.70"/><path d="M32 32L38.65 38.65"/><path d="M32 32L36.70 40.14"/><path d="M32 32L34.43 41.08"/><path d="M32 32L32.00 41.40"/><path d="M32 32L29.57 41.08"/><path d="M32 32L27.30 40.14"/><path d="M32 32L25.35 38.65"/><path d="M32 32L23.86 36.70"/><path d="M32 32L22.92 34.43"/><path d="M32 32L22.60 32.00"/><path d="M32 32L22.92 29.57"/><path d="M32 32L23.86 27.30"/><path d="M32 32L25.35 25.35"/><path d="M32 32L27.30 23.86"/><path d="M32 32L29.57 22.92"/><path d="M32 32L32.00 22.60"/><path d="M32 32L34.43 22.92"/><path d="M32 32L36.70 23.86"/><path d="M32 32L38.65 25.35"/><path d="M32 32L40.14 27.30"/><path d="M32 32L41.08 29.57"/></g><circle cx="32" cy="32" r="9.6" fill="none" stroke="#0B1722" stroke-width="1.3"/><circle class="pupil" cx="32" cy="32" r="3.9" fill="#04070B" stroke="none"/></g><circle cx="28.6" cy="28.4" r="1.9" fill="#fff" opacity=".92" stroke="none"/><circle cx="35.2" cy="35" r=".9" fill="#fff" opacity=".55" stroke="none"/><rect x="0" y="0" width="64" height="64" fill="url(#eyeShade)" stroke="none"/><rect class="lid" x="0" y="14" width="64" height="36" fill="url(#eyeLid)" stroke="none"/></g><path d="M7 32c6.5-9.5 14.5-14.5 25-14.5S50.5 22.5 57 32c-6.5 9.5-14.5 14.5-25 14.5S13.5 41.5 7 32z" fill="none"/><path class="lash" d="M9.5 29.5c6-7 13.5-10.6 22.5-10.6s16.5 3.6 22.5 10.6" fill="none" stroke-width="3"/></svg></div>
+    <button class="rd-ico rd-x" id="rsX" aria-label="Cerrar">✕</button>
+    <h2 class="rd-title" id="rsTitle">Tu tirada</h2>
+    <p class="msg me" id="rsQ"></p>
+    <div class="rs-cards" id="rsCards"></div>
+    <div class="msg cierre" id="rsCierre"></div>
+    <div class="rd-btns"><button id="rsNew" class="rd-primary">Nueva tirada</button><button id="rsClose" class="rd-ghost">Volver a la mesa</button></div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="drop" id="drop"><span>Soltá las imágenes para sumarlas al mazo como frentes</span></div>
 
@@ -2194,7 +2336,7 @@ function layoutHand(special=null, o={}){
 /* ---------- acciones ---------- */
 function updateStatus(){
   const total = deckTotal();
-  $('#btnDraw').disabled = busy || !total || hand.length >= HAND_MAX;
+  $('#btnDraw').disabled = busy || !total || hand.length >= HAND_MAX || (typeof TIR !== 'undefined' && TIR.on);
   $('#btnShuffle').disabled = busy || total < 2;
   refreshDeckLabels();
   $('#btnCollect').disabled = busy || (!hand.length && !table.length);
@@ -2356,7 +2498,7 @@ canvasEl.addEventListener('pointerdown', e => {
   if (!c){ closeDetail(); return; }
   if (paintMode){ paintCard(c); return; }
   if (!detailEl.hidden) closeDetail();
-  if (c.state === 'deck'){ draw(deckOf(c)); return; }
+  if (c.state === 'deck'){ if (!TIR.on) draw(deckOf(c)); return; }
   drag = {card:c, sx:e.clientX, sy:e.clientY, moved:false, target:c.g.position.clone(), last:null};
   if (e.pointerType !== 'mouse') drag.lp = setTimeout(() => { if (drag && !drag.moved){ const k = drag.card; drag = null; openDetail(k); } }, 520);
   canvasEl.setPointerCapture(e.pointerId);
@@ -2405,7 +2547,7 @@ canvasEl.addEventListener('pointermove', e => {
     const tip = $('#tip');
     if (c && c.state === 'deck'){ tip.textContent = deckName(deckOf(c)); tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; tip.hidden = false; }
     else tip.hidden = true;
-    const hf = !c || busy ? null : c.state === 'deck' ? topOf(deckOf(c)) : c.state === 'table' ? c : null;
+    const hf = !c || busy ? null : c.state === 'deck' ? (TIR.on ? null : topOf(deckOf(c))) : c.state === 'table' ? c : null;
     if (hf !== hoverFx){ hoverFx = hf; if (hf){ hf.isTop = isTopCard(hf); hf.hoverSide = Math.random() < .5 ? -1 : 1; Sfx.hover(hf.state === 'deck'); } }
     canvasEl.style.cursor = c ? (paintMode ? 'copy' : c.state==='deck' ? 'pointer' : 'grab') : 'default';
     const h = c && c.state === 'hand' ? c : null;
@@ -3706,6 +3848,21 @@ async function restore(){
 const cam = {pos:V(0,0,0), look:V(0,0,0), gpos:V(0,0,0), glook:V(0,0,0), init:false};
 let zoomF = 1, zoomT = 1;
 function defaultCam(){
+  if (typeof TIR !== 'undefined' && TIR.on && TIR.tw){
+    // la mesa queda arriba y centrada; el diálogo ocupa la mitad de abajo
+    const dir = camOffset.clone().normalize(), tf = Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+    // la mesa ocupa el espacio libre entre la barra de arriba y la ventana de pregunta, y se adapta a su alto
+    const rp = document.getElementById('reading'), p = rp && !rp.hidden && rp.offsetHeight ? Math.min(.72, (rp.offsetHeight + 34 + 52)/innerHeight) : .45;
+    const t = 84/innerHeight, avail = Math.max(.22, 1 - p - t);
+    // antes de tirar se ve la mesa entera; después, la cámara encuadra solo las cartas que salieron (el mazo puede quedar afuera)
+    let fw = TIR.tw, fd = TIR.td, fx = 0, fz = TIR_CZ;
+    const fb = typeof rdFocusBox === 'function' ? rdFocusBox() : null;
+    if (fb){ fw = fb.w; fd = fb.d; fx = fb.x; fz = fb.z; }
+    const distW = (fw/2 + 1.1)/(tf*camera.aspect), distD = (fd*.8)/(tf*2*avail*1.02);
+    const dist = Math.max(distW, distD, fb ? 6 : 11)*zoomF, vh = tf*dist;
+    const up = V(0,1,0).addScaledVector(dir, -dir.y).normalize();
+    cam.glook.set(fx, 0, fz).addScaledVector(up, -(p - t)*vh); cam.gpos.copy(cam.glook).addScaledVector(dir, dist); return;
+  }
   const k = Math.max(1.45, Math.min(3.2, 2.2 / camera.aspect))*zoomF;
   cam.glook.copy(camTarget); cam.gpos.copy(camTarget).addScaledVector(camOffset, k);
 }
@@ -3894,6 +4051,8 @@ function frame(now){
   requestAnimationFrame(frame);
   const dt = lastFrame ? Math.min(.05, (now - lastFrame)/1000) : 0; lastFrame = now;
   fxUpdate(dt);
+  tiradaApply(dt);
+  rdExpandUI();
   hlUpdate(dt, now);
   linkUpdate(dt, now);
   for (const c of allCards){
@@ -3980,53 +4139,334 @@ function frame(now){
   renderer.render(scene, camera);
 }
 
+/* ---------- el ojo de la mesa mira al cursor ---------- */
+addEventListener('pointermove', e => {
+  document.querySelectorAll('.eyeg').forEach(g => {
+    const r = g.ownerSVGElement.getBoundingClientRect(); if (!r.width) return;
+    const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2), d = Math.hypot(dx, dy) || 1, m = Math.min(1, d/200);
+    g.setAttribute('transform', `translate(${(dx/d*6.5*m).toFixed(2)} ${(dy/d*3.8*m).toFixed(2)})`);
+  });
+}, {passive:true});
+
+document.querySelectorAll('.rd-badge').forEach(b => {
+  b.addEventListener('pointerenter', () => b.classList.add('closed'));
+  b.addEventListener('pointerleave', () => b.classList.remove('closed'));
+});
+
+/* ---------- micrófono: un solo permiso, que queda abierto mientras dura la tirada ---------- */
+const MIC = {stream:null, an:null, data:null};
+async function micEnable(){
+  if (MIC.stream) return true;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ RD.micBlocked = true; rdMicUI(); return false; }
+  try { MIC.stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}}); }
+  catch(e){ if (e && /NotFound|Overconstrained|DevicesNotFound/.test(e.name)) RD.noMic = true; else RD.micBlocked = true; rdMicUI(); return false; }
+  Sfx.init();
+  if (Sfx.ctx){ const src = Sfx.ctx.createMediaStreamSource(MIC.stream); MIC.an = Sfx.ctx.createAnalyser(); MIC.an.fftSize = 256; MIC.an.smoothingTimeConstant = .7; src.connect(MIC.an); MIC.data = new Uint8Array(MIC.an.frequencyBinCount); }
+  RD.micBlocked = false; rdMicUI(); return true;
+}
+function micStop(){ if (MIC.stream) MIC.stream.getTracks().forEach(t => t.stop()); MIC.stream = null; MIC.an = null; }
+// las barras siguen el volumen real del micrófono
+function rdWaveLoop(){
+  const open = !rdEl.hidden;
+  if (!open){ RD.waveRaf = 0; return; }
+  RD.waveRaf = requestAnimationFrame(rdWaveLoop);
+  const bars = rdEl.querySelectorAll('.rd-box:not([hidden]) .wave i'); if (!bars.length) return;
+  if (MIC.an) MIC.an.getByteFrequencyData(MIC.data);
+  const half = bars.length/2;
+  bars.forEach((b, i) => {
+    let v = 1;
+    if (MIC.an){ const bin = 2 + Math.floor(Math.abs(i + .5 - half)/half*34); v = .18 + Math.min(1, MIC.data[bin]/200)*1.0; }
+    b.style.transform = `scaleY(${v.toFixed(3)})`;
+  });
+}
+
+/* ---------- la ventana de respuestas cambia de alto con una transición lenta y elástica ---------- */
+let rdFitRaf = 0;
+function rdFit(now){
+  cancelAnimationFrame(rdFitRaf);
+  rdFitRaf = requestAnimationFrame(() => {
+    if (rdEl.hidden) return;
+    const sc = $('#rdScroll'), st = $('#rdSettings');
+    const maxH = Math.min(innerHeight*.66, innerHeight - 140);
+    const need = 46 + (st && !st.hidden ? st.offsetHeight + 8 : 0) + sc.scrollHeight;
+    if (now === true) rdEl.style.transition = 'none';
+    rdEl.style.height = Math.round(Math.min(maxH, need)) + 'px';
+    if (now === true){ void rdEl.offsetWidth; rdEl.style.transition = ''; }
+  });
+}
+new MutationObserver(() => rdFit()).observe(document.getElementById('reading'), {childList:true, subtree:true, attributes:true, attributeFilter:['hidden']});
+addEventListener('resize', () => rdFit());
+
+/* ---------- mesa de tirada ---------- */
+const TIR = {on:false, t:0, tex:null, cv:null, prev:null};
+// el ancho de la mesa se ajusta a la tirada: mazo a la izquierda, una marca por carta y margen a los costados
+const TIR_CZ = -4.4, TIR_PAD = 1.15, TIR_GAP = 1.4, TIR_STEP = 2.0, MAIN_DECK = V(0, 0, -0.4);
+// cada carta principal puede tener hasta 2 ampliaciones, que se apoyan encima corridas medio cuerpo hacia abajo
+const EXT_MAX = 2, EXT_SHIFT = CH*.5, TIR_ROWZ = TIR_CZ - EXT_SHIFT;
+function tirLayout(n){
+  const w = TIR_PAD*2 + CW + TIR_GAP + (n-1)*TIR_STEP + CW, d = CH + EXT_MAX*EXT_SHIFT + 2*1.25;
+  const deckX = -w/2 + TIR_PAD + CW/2, first = deckX + CW/2 + TIR_GAP + CW/2;
+  return {w, d, cz:TIR_CZ, rowZ:TIR_ROWZ, deckX, xs:Array.from({length:n}, (_, i) => first + i*TIR_STEP)};
+}
+const TIR_X = n => tirLayout(n).xs;
+function drawTiradaFelt(n){
+  const L = tirLayout(n), W = 1024, H = Math.round(1024*L.d/L.w), cv = TIR.cv || (TIR.cv = document.createElement('canvas'));
+  cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'), rnd = seeded(11);
+  g.fillStyle = tableCfg.felt; g.fillRect(0, 0, W, H);
+  const id = g.getImageData(0, 0, W, H), d = id.data;
+  for (let i=0;i<d.length;i+=4){ const k = (rnd()-.5)*16; d[i]+=k; d[i+1]+=k; d[i+2]+=k; }
+  g.putImageData(id, 0, 0);
+  const vg = g.createRadialGradient(W*.55, H/2, 60, W*.55, H/2, W*.62); vg.addColorStop(0,'rgba(255,220,160,0.10)'); vg.addColorStop(1,'rgba(5,4,20,0.5)');
+  g.fillStyle = vg; g.fillRect(0, 0, W, H);
+  g.strokeStyle = g.fillStyle = tableCfg.ink;
+  g.globalAlpha = .45; g.lineWidth = 2; rr(g, 22, 22, W-44, H-44, 22); g.stroke();
+  const sx = W/L.w, cw = CW*sx + 12, ch = CH*sx + 12, py = (L.rowZ - (L.cz - L.d/2))*sx;
+  // lugar del mazo
+  const dx = (L.deckX + L.w/2)*sx;
+  g.globalAlpha = .28; g.lineWidth = 1.5; rr(g, dx - cw/2, py - ch/2, cw, ch, 10); g.stroke();
+  // una marca por carta de la tirada
+  L.xs.forEach((x, i) => {
+    const px = (x + L.w/2)*sx;
+    g.globalAlpha = .5; g.lineWidth = 2; g.setLineDash([10,8]); rr(g, px - cw/2, py - ch/2, cw, ch, 10); g.stroke(); g.setLineDash([]);
+    g.globalAlpha = .6; g.font = '400 22px "Young Serif", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(roman(i+1), px, py);
+  });
+  g.globalAlpha = 1; g.textAlign = 'start';
+  if (!TIR.tex) TIR.tex = texSetup(new THREE.CanvasTexture(cv)); else TIR.tex.needsUpdate = true;
+  if (TIR.t > .5){ felt.material.map = felt.material.emissiveMap = TIR.tex; felt.material.needsUpdate = true; }
+}
+function enterTirada(){
+  if (TIR.on) return;
+  TIR.on = true; TIR.prev = {...groupCfg}; updateStatus();
+  closeDetail(); collect(); drawTiradaFelt(RD.n);
+  groupCfg = {mode:'single', sel:groupCfg.sel};
+  setTirLayout(RD.n, false);
+  setTimeout(() => applyGroups(true), 650);
+}
+function exitTirada(){
+  if (!TIR.on) return;
+  TIR.on = false; closeDetail(); collect(); updateStatus();
+  if (TIR.prev) groupCfg = TIR.prev;
+  DECK.copy(MAIN_DECK); defaultCam();
+  setTimeout(() => applyGroups(true), 650);
+}
+let tirMapOn = false;
+function setTirLayout(n, regroup = true){
+  const L = tirLayout(n); TIR.tw = L.w; TIR.td = L.d;
+  if (TIR.w === undefined){ TIR.w = 15.4; TIR.d = 15; }
+  DECK.set(L.deckX, 0, L.rowZ); defaultCam();
+  if (regroup) applyGroups(true);
+}
+function tiradaApply(dt){
+  const target = TIR.on ? 1 : 0;
+  if (TIR.t !== target){ TIR.t += (target - TIR.t)*Math.min(1, dt*2.6); if (Math.abs(TIR.t - target) < .003) TIR.t = target; }
+  if (TIR.tw !== undefined){ TIR.w += (TIR.tw - TIR.w)*Math.min(1, dt*3); TIR.d += (TIR.td - TIR.d)*Math.min(1, dt*3); }
+  const tw = TIR.w || 15.4, td = TIR.d || 15;
+  const k = TIR.t, sx = 1 + (tw/15.4 - 1)*k, sz = 1 + (td/15 - 1)*k, z = -2.1 + (TIR_CZ + 2.1)*k;
+  felt.scale.set(sx, sz, 1); felt.position.z = z;
+  slab.scale.set(sx, 1, sz); slab.position.z = z;
+  tableRim.scale.set(sx, sz, 1); tableRim.position.z = z;
+  underGlow.scale.set(sx, sz, 1); underGlow.position.z = z;
+  handLine.visible = k < .2;
+  ring.position.set(DECK.x, .002, DECK.z);
+  const useTir = k > .5 && TIR.tex;
+  if (useTir !== tirMapOn){ tirMapOn = useTir; felt.material.map = felt.material.emissiveMap = useTir ? TIR.tex : feltTex; felt.material.needsUpdate = true; }
+}
+
 /* ---------- tirada guiada: pregunta, cartas al azar y lectura de la mesa ---------- */
+function rdFocusBox(){
+  if (!TIR.on || !RD.cards || !RD.cards.length) return null;
+  const xs = TIR_X(RD.n); let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+  RD.cards.forEach((c, i) => {
+    const n = ((RD.ext || {})[i] || []).length;
+    x0 = Math.min(x0, xs[i] - CW/2); x1 = Math.max(x1, xs[i] + CW/2);
+    z0 = Math.min(z0, TIR_ROWZ - CH/2); z1 = Math.max(z1, TIR_ROWZ + CH/2 + n*EXT_SHIFT + .55);   // incluye el botón «Ampliar»
+  });
+  return {x:(x0 + x1)/2, z:(z0 + z1)/2, w:Math.max(4.4, x1 - x0 + 1.4), d:Math.max(CH + 1.6, z1 - z0 + 1.1)};
+}
+function rdExpandUI(){
+  const box = document.getElementById('rdExpandBtns'); if (!box) return;
+  const show = TIR.on && RD.cards && RD.cards.length && !rdEl.hidden && TIR.t > .95;
+  box.hidden = !show; if (!show) return;
+  const xs = TIR_X(RD.n);
+  RD.cards.forEach((c, i) => {
+    let b = box.children[i];
+    if (!b){ b = document.createElement('button'); b.dataset.i = i; box.appendChild(b); }
+    const n = ((RD.ext || {})[i] || []).length;
+    b.hidden = n >= EXT_MAX || RD.busy;
+    const label = n ? '＋ Ampliar otra' : '＋ Ampliar';
+    if (b.textContent !== label){ b.textContent = label; b.setAttribute('aria-label', `${n ? 'Ampliar otra vez' : 'Ampliar'} ${cardName(c)}`); }
+    const p = V(xs[i], 0, TIR_ROWZ + CH/2 + n*EXT_SHIFT + .22).project(camera);
+    b.style.left = ((p.x + 1)/2*innerWidth).toFixed(1) + 'px'; b.style.top = ((1 - p.y)/2*innerHeight).toFixed(1) + 'px';
+  });
+  while (box.children.length > RD.cards.length) box.lastChild.remove();
+}
+document.getElementById('rdExpandBtns').addEventListener('click', e => { const b = e.target.closest('button'); if (b) rdExpand(+b.dataset.i); });
+function rdExpandCandidates(main, pool, used){
+  const k = main.data.src || {}, q = rdQuery([RD.q, ...(RD.answers || []).map(a => a.a), cardName(main), k.esencia].join(' '));
+  const links = new Set((main.data.vlinks || []).map(v => v.a)), usedCats = new Set(used.map(x => x.c.data.cat));
+  const scored = pool.map(c => {
+    const r = rdRel(c, q);
+    const sc = r.score + r.nameHit*3 + (links.has(c.data.uid) ? 5 : 0) + ((c.data.vlinks || []).some(v => v.a === main.data.uid) ? 2 : 0)
+      - (c.data.cat === main.data.cat ? 1.5 : 0) - (usedCats.has(c.data.cat) ? 2 : 0);
+    return {c, s:sc};
+  }).sort((a, b) => b.s - a.s);
+  const top = scored.filter(t => t.s > 0).slice(0, 9), rest = scored.filter(t => !top.includes(t)).slice(0, 30);
+  if (rest.length) top.push(rest[Math.floor(Math.random()*rest.length)]);
+  return top.length ? top : scored.slice(0, 8);
+}
+function rdExpandPrompt(i, cands){
+  const main = RD.cards[i], read = (RD.reads[i] || {}).lectura || '', prev = (RD.ext[i] || []).map(x => `${cardName(x.c)}: ${x.lectura}`).join(' | ');
+  const conv = (RD.answers || []).map(a => `La mesa preguntó «${a.q}» y la persona respondió «${a.a || '(no respondió)'}»`).join('\n');
+  return `Sos la voz de una mesa de cartas psicoeducativa basada en el circuito mente-cuerpo. No es tarot adivinatorio: no predecís el futuro ni afirmás hechos sobre la vida de la persona. Hablás en español rioplatense (voseo), cálido y claro, en frases cortas para leer en voz alta, sin listas ni markdown, sin diagnósticos.
+${RD.name ? `La persona se llama ${RD.name}.\n` : ''}Pregunta de la persona: «${RD.q}»
+${conv}
+La persona pidió AMPLIAR la carta ${cardName(main)} (posición «${RD_ROLES[RD.n][i]}»). Su lectura fue: «${read}».
+${prev ? 'Ampliaciones que ya salieron para esta carta: ' + prev : ''}
+Candidatas para la ampliación:
+${cands.map(({c}) => `- id «${c.data.uid}»: ${cardName(c)} (${catById(c.data.cat).name || 'sin categoría'}) — ${(c.data.src || {}).esencia || ''}`).join('\n')}
+
+Elegí UNA candidata que sume otra posible respuesta complementaria: un ángulo distinto que amplíe lo que dijo la carta (por ejemplo, lo que pasa en el cuerpo, una práctica, un vínculo o una necesidad relacionada), sin repetir lo ya dicho y sin conexiones rebuscadas. Después escribí esa ampliación.
+Respondé SOLO con JSON válido: {"id": "el id exacto de la candidata", "lectura": "2 a 3 frases, máximo 55 palabras"}`;
+}
+async function rdExpand(i){
+  if (RD.busy || !RD.cards[i]) return;
+  RD.ext = RD.ext || {}; const list = RD.ext[i] = RD.ext[i] || [];
+  if (list.length >= EXT_MAX) return;
+  const pool = allDecks().flatMap(d => d.cards); if (!pool.length) return toast('No quedan cartas en el mazo.');
+  const main = RD.cards[i], cands = rdExpandCandidates(main, pool, list);
+  RD.busy = true; rdStopVoice();
+  const wait = rdMsg('wait', `La mesa amplía ${cardName(main)}`);
+  const rs = $('#rdScroll'); setTimeout(() => rs.scrollTop = rs.scrollHeight, 60);
+  let res = null, c = null;
+  try { res = await rdAsk(rdExpandPrompt(i, cands)); } catch(e){ wait.remove(); RD.busy = false; return; }
+  const chosen = res && res.id && cands.find(t => t.c.data.uid === String(res.id).trim());
+  if (chosen) c = chosen.c; else { const best = cands.slice(0, 4); c = best[Math.floor(Math.random()*best.length)].c; res = null; }
+  allDecks().forEach(d => { const k = d.cards.indexOf(c); if (k >= 0) d.cards.splice(k, 1); });
+  c.dk = null; ensureFront(c); c.faceUp = true; c.yaw = 0; c.rev = 0;
+  // se apoya encima de la principal (o de la ampliación anterior), corrida medio cuerpo hacia abajo
+  placeTable(c, TIR_X(RD.n)[i] + (Math.random() - .5)*.12, TIR_ROWZ + (list.length + 1)*EXT_SHIFT, {dur:850, arc:1.2});
+  Sfx.slide(); Sfx.place(.8*SPEED); updateStatus();
+  const k = c.data.src || {};
+  const lectura = res && typeof res.lectura === 'string' ? res.lectura : `${cardName(c)} suma otra mirada: ${k.esencia || ''} ${k.pregunta || ''}`.trim();
+  list.push({c, lectura}); defaultCam();
+  wait.remove(); RD.busy = false;
+  const box = rdMsg('mesa ext', `<span class="tx"></span>`);
+  box.querySelector('.tx').textContent = lectura;
+  setTimeout(() => rs.scrollTop = rs.scrollHeight, 60);
+  rdSpeak(lectura);
+}
 const RD = {n:3, q:'', cards:[], answers:[], step:0, busy:false, voice:true, sample:undefined, ctl:null};
 const rdEl = $('#reading'), rdLog = $('#rdLog');
 try { RD.voice = localStorage.getItem('mesa-rd-voz') !== '0'; } catch(e){}
-const RD_POS = {1:[[0,-5.6]], 3:[[-2.8,-5.6],[0,-5.6],[2.8,-5.6]], 5:[[-4.6,-5.6],[-2.3,-5.6],[0,-5.6],[2.3,-5.6],[4.6,-5.6]]};
+
 const RD_ROLES = {1:['la carta de la pregunta'], 3:['lo que se ve', 'lo que está debajo', 'hacia dónde ir'],
   5:['lo que se ve', 'lo que está debajo', 'lo que lo sostiene', 'lo que puede ayudar', 'hacia dónde ir']};
+// cada letra aparece de a una, con un leve brillo dorado; los textos siguientes esperan a que termine el anterior
+const TW_SPEED = 19;
+function twAll(el){
+  if (!el || !el.isConnected) return;
+  const now = performance.now(); let t = Math.max(0, (RD.twEnd || 0) - now);
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+  // los nombres de carta (chips) aparecen enteros; el resto se dibuja letra por letra
+  while (walker.nextNode()){ const pe = walker.currentNode.parentElement; if (!pe.classList.contains('twc') && !pe.closest('.cardchip')) nodes.push(walker.currentNode); }
+  nodes.forEach(n => {
+    const frag = document.createDocumentFragment();
+    for (const ch of n.textContent){
+      if (/\s/.test(ch)){ frag.appendChild(document.createTextNode(ch)); t += 6; continue; }
+      const sp = document.createElement('span'); sp.className = 'twc'; sp.textContent = ch; sp.style.animationDelay = Math.round(t) + 'ms';
+      frag.appendChild(sp); t += TW_SPEED;
+    }
+    n.replaceWith(frag);
+  });
+  RD.twEnd = now + t;
+}
 function rdSyncVoice(){ const b = $('#rdVoice'); b.classList.toggle('off', !RD.voice); b.setAttribute('aria-pressed', String(RD.voice)); }
 rdSyncVoice();
-const RD_HELLO = '¿Qué querés preguntarle a la mesa?';
+const RD_HELLO = '¿Qué querés preguntarle a las cartas?';
+try { RD.name = localStorage.getItem('mesa-rd-nombre') || ''; } catch(e){ RD.name = ''; }
 function rdGreet(){
   if (RD.busy || RD.cards.length) return;
   if (!rdLog.querySelector('.hello')) rdMsg('mesa hello', esc(RD_HELLO));
   // se dice dentro del clic del usuario: así el navegador habilita la voz para el resto de la tirada
-  rdSpeak(RD_HELLO);
+  rdSpeak((RD.name ? `Hola, ${RD.name}. ` : '') + RD_HELLO);
   if (window.speechSynthesis && !RD.voiceChecked){
     RD.voiceChecked = true;
     setTimeout(() => { if (RD.voice && !speechSynthesis.getVoices().length) toast('Tu navegador no tiene voces instaladas, así que la mesa no puede hablar. En Chrome o Edge suelen venir incluidas.'); }, 1500);
   }
 }
 function rdOpen(){
-  rdEl.hidden = false; $('#btnReading').setAttribute('aria-expanded', 'true'); rdFillVoices();
-  if (piperWanted()) piperLoad();   // precarga la voz neuronal mientras escribís la pregunta
-  if (!RD.busy && !RD.cards.length){ rdGreet(); setTimeout(() => $('#rdQ').focus(), 50); }
+  $('#btnReading').setAttribute('aria-expanded', 'true'); rdFillVoices(); enterTirada();
+  if (piperWanted()) piperLoad();   // precarga la voz neuronal mientras te da la bienvenida
+  if (!RD.busy && !RD.cards.length) rdShowWelcome(); else rdShowPanel();
 }
-function rdClose(){ rdEl.hidden = true; $('#btnReading').setAttribute('aria-expanded', 'false'); rdStopVoice(); if (RD.ctl) RD.ctl.abort(); }
-$('#btnReading').addEventListener('click', () => rdEl.hidden ? rdOpen() : rdClose());
+function rdShowPanel(){ const tt = $('#rdTitle'); if (!tt.hidden){ RD.twEnd = performance.now() + 250; tt.textContent = '¿Qué querés preguntarle a las cartas?'; twAll(tt); } rdEl.hidden = false; rdEl.classList.remove('enter'); void rdEl.offsetWidth; rdEl.classList.add('enter'); rdFit(true); if (!RD.waveRaf) RD.waveRaf = requestAnimationFrame(rdWaveLoop); defaultCam(); }
+// cuando la ventana de pregunta cambia de alto, la cámara reacomoda la mesa justo encima
+if (window.ResizeObserver) new ResizeObserver(() => { if (TIR.on) defaultCam(); }).observe(rdEl);
+function rdMicState(){
+  const b = $('#rdMicOn'), st = $('#rdMicState');
+  if (MIC.stream){ b.textContent = 'Micrófono activo'; b.classList.add('on'); b.disabled = true; st.textContent = 'Ya podés hablarle a la mesa: tocá el micrófono y contale.'; }
+  else if (RD.noMic){ b.hidden = true; st.textContent = 'No encontré un micrófono en este equipo: podés escribir tus respuestas.'; }
+  else if (RD.micBlocked){ b.hidden = true; st.textContent = 'Esta vista no da acceso al micrófono. ' + rdDictHint(); }
+  else { b.hidden = false; b.disabled = false; b.classList.remove('on'); b.textContent = 'Activar el micrófono'; st.textContent = 'Así podés hablarle a la mesa en lugar de escribir.'; }
+}
+function rdShowWelcome(){
+  const nm = $('#rdName'); nm.value = RD.name || ''; rdMicState(); $('#rdWelcome').hidden = false;
+  nm.focus(); requestAnimationFrame(() => { nm.focus(); nm.select(); }); setTimeout(() => nm.focus(), 120);
+  // la mesa da la bienvenida en voz alta; recién cuando termina de hablar se pone a escuchar tu nombre
+  if (RD.voice){
+    RD.onSpeakEnd = rdAutoMicName;
+    rdSpeak('Te doy la bienvenida a la mesa. Antes de tirar las cartas, contame cómo te llamás.');
+    setTimeout(() => { if (RD.onSpeakEnd === rdAutoMicName){ RD.onSpeakEnd = null; rdAutoMicName(); } }, 9000);
+  } else rdAutoMicName();
+}
+// si el navegador ya tiene permiso para el micrófono, la mesa escucha tu nombre sin que toques nada
+async function rdAutoMicName(){
+  try { const st = await navigator.permissions.query({name:'microphone'}); if (st.state !== 'granted') return; } catch(e){ return; }
+  if (!(await micEnable())) return;
+  rdMicState();
+  if (!rdRec && !$('#rdName').value && !$('#rdWelcome').hidden) rdListen($('#rdName'), $('#rdMicOn'));
+}
+$('#rdMicOn').addEventListener('click', async () => { $('#rdMicOn').textContent = 'Esperando permiso…'; await micEnable(); rdMicState(); $('#rdName').focus(); if (MIC.stream && !$('#rdName').value) rdListen($('#rdName'), $('#rdMicOn')); });
+$('#rdName').addEventListener('keydown', () => { if (rdRec) rdRec.stop(); });
+function rdWelcomeDone(){
+  if (rdRec) rdRec.stop();
+  RD.name = $('#rdName').value.replace(/[.,;:!?¡¿]/g, '').trim().slice(0, 40);
+  try { localStorage.setItem('mesa-rd-nombre', RD.name); } catch(e){}
+  $('#rdWelcome').hidden = true; rdShowPanel(); rdGreet(); setTimeout(() => $('#rdQ').focus(), 50);
+}
+$('#rdStartBtn').addEventListener('click', rdWelcomeDone);
+$('#rdName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); rdWelcomeDone(); } });
+$('#rwClose').addEventListener('click', () => rdClose());
+function rdClose(){ rdRelatedClear(); rdEl.hidden = true; $('#rdWelcome').hidden = true; $('#rdResult').hidden = true; $('#btnReading').setAttribute('aria-expanded', 'false'); rdStopVoice(); if (RD.ctl) RD.ctl.abort(); if (rdRec) rdRec.stop(); micStop(); exitTirada(); }
+$('#rdGear').addEventListener('click', () => { const st = $('#rdSettings'); st.hidden = !st.hidden; $('#rdGear').setAttribute('aria-expanded', String(!st.hidden)); });
+$('#rdEndClose').addEventListener('click', () => rdClose());
+
+$('#btnReading').addEventListener('click', () => TIR.on ? rdClose() : rdOpen());
 $('#rdClose').addEventListener('click', rdClose);
 $('#rdVoice').addEventListener('click', () => { RD.voice = !RD.voice; rdSyncVoice(); if (!RD.voice) rdStopVoice(); else rdSpeak('Voz activada.'); try { localStorage.setItem('mesa-rd-voz', RD.voice ? '1' : '0'); } catch(e){} });
-$('#rdN').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (!b) return; RD.n = +b.dataset.n; $('#rdN').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); });
-function rdMsg(cls, html){ const d = document.createElement('div'); d.className = 'msg ' + cls; d.innerHTML = html; rdLog.appendChild(d); rdLog.scrollTop = rdLog.scrollHeight; return d; }
+$('#rdN').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (!b) return; RD.n = +b.dataset.n; $('#rdN').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); if (TIR.on && !RD.cards.length){ drawTiradaFelt(RD.n); setTirLayout(RD.n); } Sfx.tap(); });
+function rdMsg(cls, html){ const rs = $('#rdScroll'); setTimeout(() => rs.scrollTop = 0, 30); const d = document.createElement('div'); queueMicrotask(() => twAll(d)); d.className = 'msg ' + cls; d.innerHTML = html; rdLog.appendChild(d); rdLog.scrollTop = rdLog.scrollHeight; return d; }
 
 // --- voz: dictado y lectura en voz alta ---
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rdRec = null;
-function rdListen(target, btn){
-  if (!SR) return toast('Este navegador no permite dictar por voz. Escribí tu texto.');
+async function rdListen(target, btn){
   if (rdRec){ rdRec.stop(); return; }
-  const r = rdRec = new SR(); r.lang = 'es-AR'; r.interimResults = true; r.continuous = false;
+  if (!SR || RD.micBlocked){ target.focus(); return toast(rdDictHint()); }
+  if (!MIC.stream && !(await micEnable())){ target.focus(); return toast(rdDictHint()); }
+  const r = rdRec = new SR(); r.lang = 'es-AR'; r.interimResults = true; r.continuous = true;
+  const quiet = ms => { clearTimeout(RD.srT); RD.srT = setTimeout(() => { try { r.stop(); } catch(e){} }, ms); };
+  quiet(8000);
   const base = target.value.trim() ? target.value.trim() + ' ' : '';
-  btn.classList.add('rec');
-  r.onresult = e => { let t = ''; for (const res of e.results) t += res[0].transcript; target.value = base + t; };
+  btn.classList.add('rec'); rdEl.classList.add('listening');
+  r.onresult = e => { let t = ''; for (const res of e.results) t += res[0].transcript; target.value = base + t; quiet(2600); };
   r.onerror = e => {
     if (e.error === 'not-allowed' || e.error === 'service-not-allowed'){ RD.micBlocked = true; rdMicUI(); toast('Esta vista no da acceso al micrófono. Usá el dictado de tu sistema: te dejo cómo, debajo del cuadro de texto.'); }
-    else toast('No te escuché bien. Probá de nuevo o escribí.');
+    else if (e.error !== 'aborted' && e.error !== 'no-speech') toast('No te escuché bien. Probá de nuevo o escribí.');
   };
-  r.onend = () => { btn.classList.remove('rec'); rdRec = null; };
+  r.onend = () => { clearTimeout(RD.srT); btn.classList.remove('rec'); rdEl.classList.remove('listening'); rdRec = null; };
   try { r.start(); } catch(e){ btn.classList.remove('rec'); rdRec = null; }
 }
 $('#rdMic').addEventListener('click', e => rdListen($('#rdQ'), e.currentTarget));
@@ -4039,15 +4479,23 @@ function rdDictHint(){
   return 'Para dictar, usá el dictado por voz de tu sistema con el cursor en el cuadro.';
 }
 function rdMicUI(){
-  ['#rdMic', '#rdMic2'].forEach(s => $(s).hidden = !!RD.micBlocked);
-  document.querySelectorAll('.rd-dict').forEach(n => n.remove());
-  if (RD.micBlocked) ['#rdQ', '#rdA'].forEach(s => $(s).insertAdjacentHTML('afterend', `<p class="rd-note rd-dict">${rdDictHint()}</p>`));
+  rdEl.classList.toggle('nomic', !!RD.noMic);
+  // sin micrófono en esta vista: el botón sigue visible y, al tocarlo, explica cómo dictar con el sistema
+  ['#rdMic', '#rdMic2'].forEach(s => $(s).title = RD.micBlocked ? rdDictHint() : 'Dictar con el micrófono');
 }
 try {
   const pol = document.permissionsPolicy || document.featurePolicy;
   if (!SR || (pol && pol.allowsFeature && !pol.allowsFeature('microphone'))) RD.micBlocked = true;
 } catch(e){}
 rdMicUI();
+// si el equipo no tiene micrófono, se ocultan la onda y el botón
+(async () => {
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){ RD.noMic = true; return rdMicUI(); }
+    const ds = await navigator.mediaDevices.enumerateDevices();
+    RD.noMic = !ds.some(d => d.kind === 'audioinput'); rdMicUI();
+  } catch(e){}
+})();
 $('#rdMic2').addEventListener('click', e => rdListen($('#rdA'), e.currentTarget));
 const VOICE_GOOD = /natural|neural|online|premium|enhanced|mejorad|google/i;
 function rdVoices(){
@@ -4080,6 +4528,8 @@ $('#rdVoiceSel').addEventListener('change', e => { try { localStorage.setItem('m
 $('#rdTest').addEventListener('click', () => rdSpeak('Hola. ¿Qué querés preguntarle a la mesa?'));
 if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {};
 function rdDuck(on){
+  rdEl.classList.toggle('speaking', on);
+  if (!on && RD.onSpeakEnd){ const f = RD.onSpeakEnd; RD.onSpeakEnd = null; setTimeout(f, 250); }
   if (!Music.out || !Music.playing || !Sfx.ctx) return;
   const t = Sfx.ctx.currentTime; Music.out.gain.cancelScheduledValues(t); Music.out.gain.setValueAtTime(Music.out.gain.value, t);
   Music.out.gain.linearRampToValueAtTime(on ? .14 : .55, t + .6);
@@ -4189,24 +4639,119 @@ function rdLinks(){
   RD.cards.forEach(a => RD.cards.forEach(b => { if (a === b) return; const v = (a.data.vlinks || []).find(x => x.a === b.data.uid); if (v) out.push(`${cardName(a)} —${TIPOS[v.tipo] || 'relacionada'}→ ${cardName(b)}`); }));
   return out.length ? out.join('\n') : 'No hay vínculos directos entre estas cartas.';
 }
-function rdPrompt(last){
-  const conv = RD.answers.map((a, i) => `Después de la carta ${i+1}, la mesa preguntó: «${a.q}». La persona respondió: «${a.a || '(no respondió)'}»`).join('\n');
+function rdPrompt(last, cands){
+  const conv = RD.answers.map((a, i) => `Después de la carta ${i+1}, la mesa preguntó: «${a.q}». La persona respondió: «${a.a || '(no respondió)'}»${a.rel ? `. Conceptos del mazo cercanos a su respuesta: ${a.rel}` : ''}`).join('\n');
+  const idx = cands ? RD.cards.length : RD.cards.length - 1, role = RD_ROLES[RD.n][idx];
+  const candList = cands ? cands.map(({c}) => {
+    const k = c.data.src || {}, cat = catById(c.data.cat), lk = RD.cards.filter(p => (p.data.vlinks || []).some(v => v.a === c.data.uid) || (c.data.vlinks || []).some(v => v.a === p.data.uid)).map(cardName);
+    return `- id «${c.data.uid}»: ${cardName(c)} (${cat.name || 'sin categoría'}) — ${k.esencia || ''}${lk.length ? ` [vinculada con ${lk.join(', ')}]` : ''}`;
+  }).join('\n') : '';
+  const choose = !cands ? '' : idx === 0
+    ? `Primero ELEGÍ la carta ${idx+1} de la lista de candidatas. Tiene que ser la más directa y evidente para el tema central de la pregunta, no la más original: si la pregunta habla de miedo, elegí Miedo o lo que lo nombre directamente, no otra emoción; si habla del trabajo o de otra persona, elegí lo que refleje esa situación. Evitá conexiones rebuscadas.`
+    : `Primero ELEGÍ la carta ${idx+1} de la lista de candidatas: la que mejor encaje en la posición «${role}», que siga el hilo de las cartas anteriores y de lo que respondió la persona. Preferí las que están vinculadas con las cartas anteriores. Evitá conexiones rebuscadas.`;
   return `Sos la voz de una mesa de cartas psicoeducativa basada en el circuito mente-cuerpo: algo capta la atención, la mente interpreta, el cuerpo reacciona y la persona actúa. No es tarot adivinatorio: no predecís el futuro ni afirmás hechos sobre la vida de la persona. Ofrecés lecturas posibles, relaciones entre las cartas, preguntas y perspectivas para que la persona se lleve un panorama propio.
 Hablás en español rioplatense (voseo), con calidez y claridad, en frases cortas que suenen bien leídas en voz alta. No uses listas, emojis ni markdown. No des diagnósticos ni indicaciones médicas o terapéuticas. Si la persona expresa riesgo de hacerse daño o de dañar a otros, dejá la tirada de lado, respondé con cuidado y sugerile hablar ya con alguien de confianza o con una línea de ayuda de su país.
 
-Pregunta de la persona: «${RD.q}»
+${RD.name ? `La persona se llama ${RD.name}: podés nombrarla alguna vez, sin abusar.\n` : ''}Pregunta de la persona: «${RD.q}»
 Tirada de ${RD.n} carta${RD.n > 1 ? 's' : ''}. Posiciones: ${RD_ROLES[RD.n].join(', ')}.
-Cartas que salieron hasta ahora:
-${RD.cards.map(rdBrief).join('\n')}
-Vínculos entre estas cartas en el mazo:
-${rdLinks()}
+${RD.cards.length ? 'Cartas que salieron hasta ahora:\n' + RD.cards.map(rdBrief).join('\n') : 'Todavía no salió ninguna carta.'}
+${RD.cards.length > 1 ? 'Vínculos entre estas cartas en el mazo:\n' + rdLinks() : ''}
 ${conv ? 'Conversación hasta ahora:\n' + conv : ''}
-
-Interpretá la carta ${RD.cards.length} en su posición, relacionándola con la pregunta, con lo que respondió la persona y con las cartas anteriores (usá los vínculos si los hay).
+${cands ? `\nCandidatas para la carta ${idx+1} (posición «${role}»):\n${candList}\n\n${choose}\nDespués interpretá la carta elegida en su posición.` : `\nInterpretá la carta ${idx+1} en su posición.`} Relacionala con la pregunta, con lo que respondió la persona y con las cartas anteriores (usá los vínculos si los hay).
 ${last ? 'Es la última carta: además escribí un cierre que integre toda la tirada y deje a la persona con un panorama claro. Decidí si el cierre es «cerrado» (una síntesis con una sugerencia concreta) o «abierto» (una pregunta o invitación para seguir explorando), según lo que pida la pregunta.' : 'Después hacé UNA pregunta breve y concreta a la persona, inspirada en esta carta, que ayude a orientar la próxima.'}
 
 Respondé SOLO con JSON válido, sin texto antes ni después:
-{"lectura": "2 a 4 frases, máximo 70 palabras", "pregunta": ${last ? 'null' : '"una pregunta breve"'}, "cierre": ${last ? '"3 a 5 frases, máximo 90 palabras"' : 'null'}, "tipo_cierre": ${last ? '"abierto" o "cerrado"' : 'null'}}`;
+{${cands ? '"id": "el id exacto de la carta elegida", ' : ''}"lectura": "2 a 4 frases, máximo 70 palabras", "pregunta": ${last ? 'null' : '"una pregunta breve"'}, "cierre": ${last ? '"3 a 5 frases, máximo 90 palabras"' : 'null'}, "tipo_cierre": ${last ? '"abierto" o "cerrado"' : 'null'}}`;
+}
+// --- azar con criterio: candidatas según la pregunta, la posición y los vínculos ---
+const RD_STOP = new Set('a al algo alguien algun alguna ante antes asi como con contra cual cuando de del desde donde dos el ella ellos en entre era es esa ese eso esta este esto estoy fue hace hacer hay la las le les lo los mas me mi mis mucho muy nada ni no nos o otra otro para pero poco por porque que quien se ser si sin sobre solo son su sus tan tanto te tengo tener tiene todo tu tus un una uno unos y ya yo vos sos estas queres quiero puedo hago siento siempre nunca cosa cosas vez veces cuesta cuestan'.split(' '));
+const rdNorm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const rdStem = w => w.length > 5 ? w.slice(0, 5) : w;
+const rdToks = t => rdNorm(t).split(/[^a-zñ]+/).filter(w => w.length > 2 && !RD_STOP.has(w)).map(rdStem);
+// sinónimos frecuentes: llevan la pregunta al nombre de la carta que corresponde
+const RD_SYN = [
+  [/temor|asust|panic|pavor|terror|miedo/, 'miedo'], [/bronca|rabia|\bira\b|furia|enoj/, 'enojo'],
+  [/triste|bajon|desanim|deprim|llor/, 'tristeza'], [/verguenz|que diran|ridicul|me juzg|juicio|quedar mal|mirada de/, 'verguenza'],
+  [/ansied|ansios|nervios|inquiet|angusti/, 'ansiedad'], [/culp/, 'culpa'], [/\bsol[oa]\b|soledad|aislad/, 'soledad'],
+  [/envidi|celos/, 'envidia'], [/decir que no|poner limites|limites/, 'decir que no'], [/complac|agradar|quedar bien/, 'complacer'],
+  [/perfecc/, 'perfeccionismo'], [/control/, 'controlar'], [/duelo|perdi|perder|perdida|murio/, 'perdida'],
+  [/pareja|novi[oa]|enamor/, 'amor'], [/\bmadre\b|\bmama\b|mi vieja\b/, 'madre'], [/\bpadre\b|\bpapa\b|mi viejo\b/, 'padre'],
+  [/trabaj|jefe|laboral|oficina/, 'presion'], [/dormir|insomn|sueno/, 'sueno'], [/cansad|agotad|estres|burnout/, 'sobrecarga'],
+  [/pensar demasiado|sobrepiens|no paro de pensar|rumi/, 'sobrepensar'], [/decidir|decision|elegir/, 'decision'],
+  [/cambi|mudanz/, 'cambio'], [/sentido|proposito|para que/, 'proposito'], [/critic/, 'critica'], [/error|equivoc/, 'error']
+];
+function rdQuery(text){
+  const raw = rdNorm(text), extra = RD_SYN.filter(([re]) => re.test(raw)).map(([, w]) => w);
+  return {orig: raw, raw: raw + ' ' + extra.join(' '), toks: new Set([...rdToks(text), ...extra.flatMap(rdToks)]), extra};
+}
+function rdCardToks(c){
+  if (c._rt && c._rt.sig === c.data.sig) return c._rt;
+  const k = c.data.src || {}, name = rdNorm(cardName(c));
+  return c._rt = {sig:c.data.sig, nameNorm:name, name:new Set(rdToks(name)), ess:new Set(rdToks(k.esencia)), sub:new Set(rdToks(k.subcategoria)),
+    desc:new Set(rdToks([k.descripcion, ...(k.secciones || []).map(x => x.texto)].join(' ')))};
+}
+function rdRel(c, q){
+  const t = rdCardToks(c); let s = 0;
+  q.toks.forEach(w => { s += (t.name.has(w) ? 5 : 0) + (t.ess.has(w) ? 2.5 : 0) + (t.sub.has(w) ? 2 : 0) + (t.desc.has(w) ? 1 : 0); });
+  // la carta nombrada tal cual en la pregunta pesa más que la que llega por un sinónimo
+  const re = new RegExp('\\b' + t.nameNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+  const nameHit = t.nameNorm.length > 2 ? (re.test(q.orig) ? 1.25 : re.test(q.raw) ? 1 : 0) : 0;
+  return {score:s, nameHit};
+}
+const RD_ROLE_CATS = {
+  'lo que está debajo': ['Profundidad', 'Heridas de infancia', 'Raíces', 'Necesidades', 'Distorsiones cognitivas', 'Emociones de protección'],
+  'lo que lo sostiene': ['Trampas', 'Respuestas automáticas', 'Distorsiones cognitivas', 'Influencias de la mente', 'Influencias del cuerpo', 'Modos mentales'],
+  'lo que puede ayudar': ['Recursos', 'Prácticas', 'Capacidades', 'Actitudes', 'Hilos'],
+  'hacia dónde ir': ['Brújula', 'Actitudes', 'Prácticas', 'Recursos', 'Capacidades', 'Emociones de apertura']
+};
+function rdCandidates(pool){
+  const i = RD.cards.length, role = RD_ROLES[RD.n][i], prev = RD.cards[i-1], prefs = RD_ROLE_CATS[role] || [];
+  const q = rdQuery(i === 0 ? RD.q : [RD.q, ...RD.answers.map(a => a.a)].join(' '));
+  const linked = new Map();
+  RD.cards.forEach(p => (p.data.vlinks || []).forEach(v => linked.set(v.a, (linked.get(v.a) || 0) + (/te_ayuda|te_orienta/.test(v.tipo) ? 1.5 : 1))));
+  const scored = pool.map(c => {
+    const rel = rdRel(c, q), catName = (c.data.src && c.data.src.categoria) || catById(c.data.cat).name || '';
+    const s = i === 0 ? rel.score + rel.nameHit*12
+      : rel.score*1.2 + rel.nameHit*4 + (prefs.includes(catName) ? 4 : 0) + (linked.get(c.data.uid) || 0)*2.5
+        + RD.cards.reduce((n, p) => n + ((c.data.vlinks || []).some(v => v.a === p.data.uid) ? 1.2 : 0), 0)
+        - (prev && prev.data.cat === c.data.cat ? 2 : 0);
+    return {c, s};
+  }).sort((a, b) => b.s - a.s);
+  let top = scored.filter(t => t.s > 0).slice(0, 10);
+  if (i === 0 && top.length < 4){
+    // la pregunta no nombra nada del mazo: candidatas amplias para que la mesa elija la que mejor encaje
+    const broad = scored.filter(t => !top.includes(t) && /Desaf|Emocion|Sensaci|Trampa|Necesid|Situac|Vínculo/.test((t.c.data.src || {}).categoria || catById(t.c.data.cat).name || ''));
+    for (let j = broad.length - 1; j > 0; j--){ const r = Math.floor(Math.random()*(j+1)); [broad[j], broad[r]] = [broad[r], broad[j]]; }
+    top = [...top, ...broad.slice(0, 12 - top.length)];
+  }
+  // dos comodines razonables, para que la misma pregunta no dé siempre la misma tirada
+  const rest = scored.filter(t => !top.includes(t) && (i > 0 || t.s > 0)).slice(0, 40), wild = [];
+  while (rest.length && wild.length < 2) wild.push(rest.splice(Math.floor(Math.random()*rest.length), 1)[0]);
+  return [...top, ...wild];
+}
+function rdWeightedPick(cands){
+  const i = RD.cards.length, best = cands.slice().sort((a, b) => b.s - a.s);
+  if (!best.length) return null;
+  if (best[0].s <= 0) return best[Math.floor(Math.random()*best.length)].c;
+  const pickFrom = i === 0 ? best.slice(0, 3) : best.slice(0, 6), w = pickFrom.map((t, k) => i === 0 ? [1, .35, .15][k]*Math.max(.1, t.s) : Math.max(.3, t.s));
+  let r = Math.random()*w.reduce((a, b) => a + b, 0);
+  for (let k = 0; k < pickFrom.length; k++){ r -= w[k]; if (r <= 0) return pickFrom[k].c; }
+  return pickFrom[0].c;
+}
+async function rdAsk(prompt){
+  if (RD.sample){
+    RD.ctl = new AbortController();
+    try { return await RD.sample.json(prompt, {modelTier:'quick', signal:RD.ctl.signal, cache:false}); }
+    catch(e){ if (e && e.code === 'cancelled') throw e; if (RD_ERR[e && e.code]) rdMsg('wait', RD_ERR[e.code]); return null; }
+  }
+  if (RD.ollama){
+    try {
+      const r = await fetch(OLLAMA + '/api/chat', {method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:RD.ollama, stream:false, format:'json', options:{temperature:.7}, messages:[{role:'user', content:prompt}]})});
+      return JSON.parse((await r.json()).message.content);
+    } catch(e){ console.warn('Ollama', e); }
+  }
+  return null;
 }
 function rdFallback(c, last){
   const k = c.data.src || {};
@@ -4233,10 +4778,10 @@ async function rdStart(){
   if (!q) return toast('Escribí o dictá tu pregunta primero.');
   if (RD.busy) return;
   if (rdRec) rdRec.stop();
-  RD.q = q; RD.cards = []; RD.answers = []; RD.step = 0; rdLog.innerHTML = '';
+  RD.q = q; RD.cards = []; RD.answers = []; RD.reads = []; RD.ext = {}; RD.final = null; RD.step = 0; rdLog.innerHTML = '';
   rdSpeak('Muy bien. Barajo y saco la primera carta.');
   $('#rdSetup').hidden = true; $('#rdEnd').hidden = true;
-  rdMsg('me', esc(q));
+  $('#rdTitle').hidden = true;
   closeDetail(); collect();
   if (RD.sample === undefined){ try { RD.sample = window.claude && claude.use ? await claude.use('sample') : null; } catch(e){ RD.sample = null; } }
   if (!RD.sample && STANDALONE && RD.ollama === undefined) RD.ollama = await ollamaDetect();
@@ -4248,49 +4793,104 @@ async function rdStart(){
 async function rdNext(){
   const pool = allDecks().flatMap(d => d.cards);
   if (!pool.length){ rdMsg('mesa', 'No quedan cartas en los mazos.'); return rdFinish(); }
-  const c = pool[Math.floor(Math.random()*pool.length)];
-  allDecks().forEach(d => { const i = d.cards.indexOf(c); if (i >= 0) d.cards.splice(i, 1); });
-  c.dk = null; ensureFront(c); c.faceUp = true; c.yaw = 0; c.rev = 0;
-  const [x, z] = RD_POS[RD.n][RD.step];
-  placeTable(c, x, z, {dur:900, arc:1.5}); Sfx.slide(); Sfx.place(.85*SPEED); updateStatus();
-  RD.cards.push(c);
-  const last = RD.cards.length >= RD.n, cat = catById(c.data.cat);
-  const box = rdMsg('mesa', `<span class="cardchip"><i style="background:${cat.id ? cat.edge : '#fff'}"></i>${esc(cardName(c))}</span><span class="tx"></span>`);
-  const wait = rdMsg('wait', 'La mesa está leyendo la carta');
+  // cada carta tiene su propia ventana: se limpia lo anterior y queda la pregunta como referencia
+  rdLog.innerHTML = ''; RD.twEnd = 0; rdLog.classList.remove('swap'); void rdLog.offsetWidth; rdLog.classList.add('swap');
+  rdMsg('me ctx', esc(RD.q));
+  const last = RD.cards.length + 1 >= RD.n, cands = rdCandidates(pool);
+  const wait = rdMsg('wait', RD.cards.length ? 'La mesa está eligiendo la próxima carta' : 'La mesa está buscando la carta de tu pregunta');
   RD.busy = true;
-  let res = null;
-  if (RD.sample){
-    RD.ctl = new AbortController();
-    try { res = await RD.sample.json(rdPrompt(last), {modelTier:'quick', signal:RD.ctl.signal, cache:false}); }
-    catch(e){ if (e && e.code === 'cancelled'){ wait.remove(); RD.busy = false; return; } if (RD_ERR[e && e.code]) rdMsg('wait', RD_ERR[e.code]); }
-  }
-  if (!RD.sample && RD.ollama){
-    try {
-      const r = await fetch(OLLAMA + '/api/chat', {method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({model:RD.ollama, stream:false, format:'json', options:{temperature:.8}, messages:[{role:'user', content:rdPrompt(last)}]})});
-      const j = await r.json(); res = JSON.parse(j.message.content);
-    } catch(e){ console.warn('Ollama', e); }
-  }
+  let res = null, c = null;
+  try {
+    res = await rdAsk(rdPrompt(last, cands));
+    const chosen = res && res.id && cands.find(t => t.c.data.uid === String(res.id).trim());
+    if (chosen) c = chosen.c; else { c = rdWeightedPick(cands) || pool[Math.floor(Math.random()*pool.length)]; res = null; }
+    allDecks().forEach(d => { const k = d.cards.indexOf(c); if (k >= 0) d.cards.splice(k, 1); });
+    c.dk = null; ensureFront(c); c.faceUp = true; c.yaw = 0; c.rev = 0;
+    placeTable(c, TIR_X(RD.n)[RD.step], TIR_ROWZ, {dur:900, arc:1.5}); Sfx.slide(); Sfx.place(.85*SPEED); updateStatus();
+    RD.cards.push(c); defaultCam();
+    // si la carta que salió estaba flotando como relacionada, deja su lugar
+    const fl = document.querySelector(`#rdRelated .rel-card[data-uid="${c.data.uid}"]`);
+    if (fl){ fl.style.opacity = 0; setTimeout(() => { fl.remove(); rdRelatedLayout(); }, 700); }
+    // si la IA eligió una carta que no estaba entre las candidatas, se pide la lectura de la que eligió la mesa
+    if (!res && (RD.sample || RD.ollama)) res = await rdAsk(rdPrompt(last));
+  } catch(e){ wait.remove(); RD.busy = false; return; }
   if (!res || typeof res.lectura !== 'string') res = rdFallback(c, last);
   wait.remove(); RD.busy = false;
+  const cat = catById(c.data.cat);
+  const box = rdMsg('mesa', `<span class="cardchip"><i style="background:${cat.id ? cat.edge : '#fff'}"></i>${esc(cardName(c))}</span><span class="tx"></span>`);
   box.querySelector('.tx').textContent = res.lectura;
+  RD.reads.push({c, role:RD_ROLES[RD.n][RD.cards.length - 1], lectura:res.lectura});
   let speak = res.lectura;
   if (!last && res.pregunta){ box.insertAdjacentHTML('beforeend', `<span class="q">${esc(res.pregunta)}</span>`); speak += ' ' + res.pregunta; }
   rdLog.scrollTop = rdLog.scrollHeight;
-  if (last){
-    if (res.cierre){ rdMsg('mesa cierre', `<b>${res.tipo_cierre === 'cerrado' ? 'Cierre' : 'Para seguir explorando'}</b>${esc(res.cierre)}`); speak += ' ' + res.cierre; }
-    rdSpeak(speak); return rdFinish();
-  }
+  if (last){ RD.final = res; rdSpeak(speak); return rdFinish(); }
   rdSpeak(speak);
   RD.pending = res.pregunta || '¿Algo para agregar antes de la próxima carta?';
   $('#rdA').value = ''; $('#rdReply').hidden = false; $('#rdA').focus();
 }
+// --- cartas relacionadas con lo que respondiste: conceptos vecinos que amplían la lectura ---
+const relBacks = {};
+function relBackURL(cat){
+  if (!cat.id || !cat.dorso) return '';
+  if (!relBacks[cat.id]){ const src = backTexOf(cat).image, c = document.createElement('canvas'); c.width = 240; c.height = Math.round(240*src.height/src.width); c.getContext('2d').drawImage(src, 0, 0, c.width, c.height); relBacks[cat.id] = c.toDataURL('image/jpeg', .85); }
+  return relBacks[cat.id];
+}
+function rdRelatedPick(answer){
+  const cur = RD.cards[RD.cards.length - 1]; if (!cur) return [];
+  const q = rdQuery(answer), drawn = new Set(RD.cards.map(c => c.data.uid)), curLinks = new Set((cur.data.vlinks || []).map(v => v.a));
+  const scored = allCards.filter(c => !drawn.has(c.data.uid) && c.data.src).map(c => {
+    const r = rdRel(c, q);
+    return {c, s: r.score*2 + r.nameHit*8 + (curLinks.has(c.data.uid) ? 3 : 0) + ((c.data.vlinks || []).some(v => v.a === cur.data.uid) ? 1.5 : 0)};
+  }).filter(t => t.s >= 3).sort((a, b) => b.s - a.s);
+  // de categorías distintas, para que amplíen hacia otros lados (cuerpo, prácticas, vínculos…)
+  const out = [], cats = new Set();
+  for (const t of scored){ if (cats.has(t.c.data.cat)) continue; out.push(t.c); cats.add(t.c.data.cat); if (out.length === 3) break; }
+  return out;
+}
+function rdRelatedClear(){ const box = $('#rdRelated'); box.querySelectorAll('.rel-card, .cap').forEach(n => { n.classList.add('enter'); n.style.opacity = 0; setTimeout(() => n.remove(), 700); }); RD.relCards = []; }
+function rdRelatedShow(cards){
+  rdRelatedClear(); if (!cards.length) return;
+  const box = $('#rdRelated'); RD.relCards = cards;
+  const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = 'Relacionadas con tu respuesta'; box.appendChild(cap);
+  cards.forEach((c, i) => {
+    const cat = catById(c.data.cat), k = c.data.src || {}, el = document.createElement('div');
+    el.className = 'rel-card enter'; el.dataset.uid = c.data.uid; el.title = `${cardName(c)}: ${k.esencia || ''}`;
+    el.style.animationDelay = `${-i*1.7}s`;
+    el.innerHTML = `<div class="spin" style="animation-delay:${-i*4.5}s"><div class="face" style="background-image:url('${thumbFor(c)}')"></div><div class="face back" style="background-image:url('${relBackURL(cat)}')"></div></div>
+      <div class="lbl">${esc(cardName(c))}<small>${esc(cat.name || '')}</small></div>`;
+    box.appendChild(el);
+    setTimeout(() => el.classList.remove('enter'), 60 + i*180);
+  });
+  rdRelatedLayout();
+}
+function rdRelatedLayout(){
+  const box = $('#rdRelated'), cards = [...box.querySelectorAll('.rel-card:not(.enter), .rel-card.enter')].filter(n => n.style.opacity !== '0');
+  if (!cards.length) return;
+  const r = rdEl.getBoundingClientRect(), w = 112, h = w*16/9, gap = 34, caps = box.querySelectorAll('.cap'), cap = caps[caps.length - 1];
+  const sideRoom = Math.min(r.left, innerWidth - r.right);
+  if (rdEl.hidden){ box.style.display = 'none'; return; } box.style.display = '';
+  if (sideRoom >= w + gap + 10){
+    // a los costados de la ventana: primera a la izquierda, segunda a la derecha, tercera afuera a la izquierda
+    const cy = r.top + r.height*.42 - h/2;
+    const pos = [[r.left - gap - w, cy], [r.right + gap, cy + 26], [r.left - gap*2 - w*2, cy + 40]];
+    cards.forEach((el, i) => { let [x, y] = pos[i]; if (x < 8) [x, y] = [r.right + gap*2 + w, cy + 50]; el.style.left = x + 'px'; el.style.top = y + 'px'; });
+    if (cap){ cap.style.left = (r.left - gap) + 'px'; cap.style.transform = 'translateX(-100%)'; cap.style.top = (cy - 28) + 'px'; }
+  } else {
+    // pantallas angostas: en fila, encima de la ventana
+    const total = cards.length*w*.7 + (cards.length - 1)*14, x0 = (innerWidth - total)/2, y = Math.max(80, r.top - h*.7 - 70);
+    cards.forEach((el, i) => { el.style.width = w*.7 + 'px'; el.style.left = (x0 + i*(w*.7 + 14)) + 'px'; el.style.top = y + 'px'; });
+    if (cap){ cap.style.left = x0 + 'px'; cap.style.transform = ''; cap.style.top = (y - 22) + 'px'; }
+  }
+}
+addEventListener('resize', () => rdRelatedLayout());
+if (window.ResizeObserver) new ResizeObserver(() => rdRelatedLayout()).observe(rdEl);
 function rdAnswer(skip){
   if (RD.busy) return;
   if (rdRec) rdRec.stop();
   const a = skip ? '' : $('#rdA').value.trim();
-  if (a) rdMsg('me', esc(a));
-  RD.answers.push({q:RD.pending, a});
+  const rel = a ? rdRelatedPick(a) : [];
+  if (rel.length) rdRelatedShow(rel); else rdRelatedClear();
+  RD.answers.push({q:RD.pending, a, rel:rel.map(cardName).join(', ')});
   $('#rdReply').hidden = true; RD.step++; rdStopVoice();
   rdNext();
 }
@@ -4300,7 +4900,21 @@ $('#rdQ').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 $('#rdSend').addEventListener('click', () => rdAnswer(false));
 $('#rdSkip').addEventListener('click', () => rdAnswer(true));
 $('#rdA').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); rdAnswer(false); } });
-$('#rdNew').addEventListener('click', () => { rdStopVoice(); RD.cards = []; rdLog.innerHTML = ''; $('#rdEnd').hidden = true; $('#rdSetup').hidden = false; $('#rdQ').value = ''; $('#rdQ').focus(); collect(); rdGreet(); });
+function rdShowResult(){
+  const f = RD.final || {};
+  $('#rsQ').textContent = RD.q;
+  $('#rsCards').innerHTML = (RD.reads || []).map((r, i) => { const cat = catById(r.c.data.cat);
+    return `<div class="rs-card"><span class="rs-pos">${i+1}. ${esc(r.role)}</span><span class="cardchip"><i style="background:${cat.id ? cat.edge : '#fff'}"></i>${esc(cardName(r.c))}</span><p>${esc(r.lectura)}</p>${((RD.ext || {})[i] || []).map(x => { const xc = catById(x.c.data.cat); return `<div class="rs-ext"><span class="cardchip"><i style="background:${xc.id ? xc.edge : '#fff'}"></i>${esc(cardName(x.c))}</span><p>${esc(x.lectura)}</p></div>`; }).join('')}</div>`; }).join('');
+  const ci = $('#rsCierre'); ci.hidden = !f.cierre;
+  ci.innerHTML = f.cierre ? `<b>${f.tipo_cierre === 'cerrado' ? 'Cierre' : 'Para seguir explorando'}</b>${esc(f.cierre)}` : '';
+  rdRelatedClear(); rdEl.hidden = true; $('#rdResult').hidden = false;
+  rdSpeak(f.cierre || 'Esta fue tu tirada.');
+}
+$('#rdShowRes').addEventListener('click', rdShowResult);
+$('#rsClose').addEventListener('click', () => rdClose());
+$('#rsX').addEventListener('click', () => rdClose());
+$('#rsNew').addEventListener('click', () => { $('#rdResult').hidden = true; rdShowPanel(); rdNewTirada(); });
+function rdNewTirada(){ rdStopVoice(); rdRelatedClear(); RD.ext = {}; $('#rdTitle').hidden = false; drawTiradaFelt(RD.n); setTirLayout(RD.n, false); RD.cards = []; rdLog.innerHTML = ''; $('#rdEnd').hidden = true; $('#rdSetup').hidden = false; $('#rdQ').value = ''; $('#rdQ').focus(); collect(); rdGreet(); }
 
 (async () => {
   try { await Promise.all([document.fonts.load('400 92px "Young Serif"'), document.fonts.load('600 20px Figtree')]); } catch(e){}
