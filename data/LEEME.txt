@@ -1,0 +1,11 @@
+Acá van las cartas, categorías e imágenes.
+
+1. Abrí la mesa publicada en Claude.
+2. Menú → «Exportar datos e imágenes». Se descarga mesa-datos.zip.
+3. Descomprimilo DENTRO de esta carpeta, para que quede:
+
+   data/mazo.json
+   data/assets/...
+
+Cada vez que edites cartas en la mesa publicada, repetí estos pasos para actualizar la exportada.
+Si esta carpeta está vacía, la mesa usa la copia de cartas que trae incluida (sin imágenes).
